@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Statistical Learning & Prediction — Interactive</title>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">SLP · Interactive<small>Statistical Learning &amp; Prediction</small></div>
+    <nav class="nav" id="nav">
+      <h4>Foundations</h4>
+      <a data-go="intro" class="active">Overview</a>
+      <a data-go="knn">k-Nearest Neighbours</a>
+      <a data-go="linreg">Linear Regression</a>
+      <a data-go="loss">Loss Functions</a>
+      <a data-go="reg">Regularization (Ridge/Lasso)</a>
+      <a data-go="bv">Bias–Variance Tradeoff</a>
+      <a data-go="logreg">Logistic Regression</a>
+      <h4>Optimisation</h4>
+      <a data-go="gd">Gradient Descent</a>
+      <a data-go="sgd">SGD &amp; Softmax</a>
+      <h4>Neural Nets</h4>
+      <a data-go="act">Activation Functions</a>
+      <a data-go="mlp">MLP &amp; Backprop</a>
+      <h4>Trees &amp; Ensembles</h4>
+      <a data-go="dtree">Decision Trees</a>
+      <a data-go="bagging">Bagging</a>
+      <a data-go="rf">Random Forest</a>
+      <a data-go="boost">Boosting / AdaBoost</a>
+      <h4>Kernels &amp; Margins</h4>
+      <a data-go="kernel">Kernel Trick</a>
+      <a data-go="svm">Support Vector Machine</a>
+      <h4>Evaluation</h4>
+      <a data-go="cv">Cross-Validation</a>
+      <a data-go="roc">ROC &amp; Confusion Matrix</a>
+      <h4>Unsupervised</h4>
+      <a data-go="pca">PCA</a>
+      <a data-go="mds">MDS</a>
+      <a data-go="kmeans">k-Means</a>
+      <a data-go="hc">Hierarchical Clustering</a>
+      <a data-go="anom">Anomaly Detection</a>
+    </nav>
+  </aside>
+
+  <main class="content">
+
+    <!-- ========================= INTRO ========================= -->
+    <section class="section active" id="intro">
+      <h1>Statistical Learning &amp; Prediction</h1>
+      <p class="lead">An interactive companion to the SLP course. Every section below is a live, click-and-drag visualisation of a core concept — from k-NN and bias/variance up to kernel SVMs, ensembles, and PCA. Drag points, move sliders, watch the model react.</p>
+      <div class="pill-row">
+        <a data-go="knn">k-NN</a><a data-go="linreg">Linear Reg</a><a data-go="logreg">Logistic Reg</a><a data-go="reg">Ridge / Lasso</a>
+        <a data-go="bv">Bias–Variance</a><a data-go="cv">k-Fold CV</a><a data-go="roc">ROC / AUC</a>
+        <a data-go="gd">Gradient Descent</a><a data-go="mlp">Backprop</a>
+        <a data-go="dtree">Decision Trees</a><a data-go="rf">Random Forest</a><a data-go="boost">AdaBoost</a>
+        <a data-go="kernel">Kernels</a><a data-go="svm">SVM</a>
+        <a data-go="pca">PCA</a><a data-go="kmeans">k-Means</a><a data-go="hc">Hierarchical</a><a data-go="anom">Anomaly</a>
+      </div>
+      <div class="row">
+        <div class="card">
+          <h3>How to use</h3>
+          <ul>
+            <li>Click on any canvas to add data points.</li>
+            <li>Drag sliders to change hyper-parameters; the model re-fits live.</li>
+            <li>Use <b>Reset</b> / <b>Resample</b> buttons in each demo.</li>
+            <li>Two-class problems use <span style="color:#7cc4ff">blue</span> and <span style="color:#ff7c9c">pink</span>.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Topics covered</h3>
+          <p class="muted">k-NN · linear/ridge/lasso regression · bias–variance · gradient descent · softmax + SGD · activation functions · MLP + backprop · decision trees · bagging · random forest · AdaBoost · kernel trick · soft-margin SVM · PCA · MDS · k-means</p>
+        </div>
+      </div>
+      <div class="footer">Built as a study aid from the SLP lecture slides. All visualisations run client-side — no server, no dependencies.</div>
+    </section>
+
+    <!-- ========================= k-NN ========================= -->
+    <section class="section" id="knn">
+      <h1>k-Nearest Neighbours</h1>
+      <p class="lead">A <i>lazy</i>, non-parametric classifier: to predict a point's class, look at its <span class="math">k</span> nearest training points and take a (weighted) majority vote. No training — all the work happens at query time.</p>
+      <div class="card">
+        <canvas id="knn-c" height="420"></canvas>
+        <div class="controls">
+          <div class="ctrl"><label>k = <span class="val" id="knn-kv">5</span></label><input type="range" id="knn-k" min="1" max="25" value="5"></div>
+          <div class="ctrl"><label>Distance</label>
+            <select id="knn-dist"><option value="l2">Euclidean (L2)</option><option value="l1">Manhattan (L1)</option></select>
+          </div>
+          <div class="ctrl"><label>Weighted vote</label>
+            <select id="knn-w"><option value="uniform">uniform</option><option value="inv">1/distance</option></select>
+          </div>
+          <div class="ctrl"><label>Add as class</label>
+            <select id="knn-cls"><option value="0">Class A (blue)</option><option value="1">Class B (pink)</option></select>
+          </div>
+          <button id="knn-demo">Demo points</button>
+          <button class="danger" id="knn-clear">Clear</button>
+        </div>
+        <div class="hint">Click on the canvas to add training points. The shaded background is the kNN decision region for the current k.</div>
+      </div>
+      <div class="card tight">
+        <h3>Intuition</h3>
+        <p>Small <b>k</b> ⇒ jagged, high-variance decision boundary that fits noise. Large <b>k</b> ⇒ smoother but biased boundary. Plot a validation curve over k to choose. Distance metric and feature scaling matter a lot.</p>
+      </div>
+    </section>
+
+    <!-- ========================= LINEAR REGRESSION ========================= -->
+    <section class="section" id="linreg">
+      <h1>Linear Regression</h1>
+      <p class="lead">Fit <span class="math">ŷ = w·x + b</span> by minimising mean-squared error. Drag points around — the OLS solution updates in closed form.</p>
+      <div class="card">
+        <canvas id="lr-c" height="420"></canvas>
+        <div class="controls">
+          <div class="ctrl"><label>Degree = <span class="val" id="lr-dv">1</span></label><input type="range" id="lr-d" min="1" max="9" value="1"></div>
+          <button id="lr-demo">Sample noisy curve</button>
+          <button class="danger" id="lr-clear">Clear</button>
+          <div class="kpi"><b id="lr-mse">—</b><span>train MSE</span></div>
+          <div class="kpi"><b id="lr-r2">—</b><span>R²</span></div>
+        </div>
+        <div class="hint">Click to add points; drag existing points to move them. Increasing polynomial degree shows over-fitting — high degree memorises noise.</div>
+      </div>
+    </section>
+
+    <!-- ========================= LOSS ========================= -->
+    <section class="section" id="loss">
+      <h1>Loss Functions</h1>
+      <p class="lead">A loss measures how wrong a single prediction is. Different losses give very different sensitivities to outliers and large errors.</p>
+      <div class="card">
+        <canvas id="loss-c" height="380"></canvas>
+        <div class="controls">
+          <div class="ctrl"><label>δ (Huber) = <span class="val" id="loss-dv">1.0</span></label><input type="range" id="loss-d" min="0.1" max="3" step="0.05" value="1.0"></div>
+        </div>
+        <div class="legend">
+          <span><i class="dot" style="background:#7cc4ff"></i>L2 (squared)</span>
+          <span><i class="dot" style="background:#ff7c9c"></i>L1 (absolute)</span>
+          <span><i class="dot" style="background:#ffb86b"></i>Huber</span>
+          <span><i class="dot" style="background:#7cffb2"></i>0/1 (classification)</span>
+          <span><i class="dot" style="background:#9d7cff"></i>hinge</span>
+          <span><i class="dot" style="background:#e6edf3"></i>log-loss</span>
+        </div>
+        <p class="hint">L2 punishes large errors quadratically (sensitive to outliers). L1 is robust but non-differentiable at 0. Huber blends both. Hinge and log-loss are the SVM and logistic regression losses.</p>
+      </div>
+    </section>
+
+    <!-- ========================= REGULARIZATION ========================= -->
+    <section class="section" id="reg">
+      <h1>Regularization — Ridge &amp; Lasso</h1>
+      <p class="lead">Adding a penalty on the coefficient norm shrinks weights, trading bias for reduced variance. L2 (ridge) shrinks smoothly; L1 (lasso) zeroes coefficients — it's a feature selector.</p>
+      <div class="card">
+        <canvas id="reg-c" height="400"></canvas>
+        <div class="controls">
+          <div class="ctrl"><label>log₁₀ λ = <span class="val" id="reg-lv">-3</span></label><input type="range" id="reg-l" min="-5" max="3" step="0.1" value="-3"></div>
+          <div class="ctrl"><label>Penalty</label>
+            <select id="reg-type"><option value="ridge">Ridge (L2)</option><option value="lasso">Lasso (L1)</option></select>
+          </div>
+          <div class="ctrl"><label>Degree = <span class="val" id="reg-dv">9</span></label><input type="range" id="reg-d" min="2" max="12" value="9"></div>
+          <button id="reg-demo">Resample data</button>
+        </div>
+      </div>
+      <div class="card tight">
+        <h3>Coefficient bar chart</h3>
+        <canvas id="reg-bars" height="140"></canvas>
+        <p class="hint">Watch coefficients shrink as λ grows. With lasso, many bars snap to exactly zero — that's sparsity.</p>
+      </div>
+    </section>
+
+    <!-- ========================= BIAS-VARIANCE ========================= -->
+    <section class="section" id="bv">
+      <h1>Bias–Variance Tradeoff</h1>
+      <p class="lead">Expected test error decomposes into <span class="math">bias² + variance + noise</span>. Simple models have high bias; complex ones have high variance. The sweet spot minimises their sum.</p>
+      <div class="card">
+        <div class="row">
+          <div style="flex:1 1 420px"><canvas id="bv-c" height="380"></canvas><div class="hint">Each thin line is a polynomial fit on a different random sample. Wider spread ⇒ higher variance.</div></div>
+          <div style="flex:1 1 320px"><canvas id="bv-curve" height="380"></canvas><div class="hint">Train vs. test error as model complexity grows.</div></div>
+        </div>
+        <div class="controls">
+          <div class="ctrl"><label>Degree = <span class="val" id="bv-dv">3</span></label><input type="range" id="bv-d" min="1" max="15" value="3"></div>
+          <div class="ctrl"><label>Noise σ = <span class="val" id="bv-nv">0.30</span></label><input type="range" id="bv-n" min="0.05" max="1.0" step="0.05" value="0.30"></div>
+          <div class="ctrl"><label>Samples / fit = <span class="val" id="bv-sv">25</span></label><input type="range" id="bv-s" min="10" max="80" value="25"></div>
+          <button id="bv-resamp">Redraw 25 fits</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================= GRADIENT DESCENT ========================= -->
+    <section class="section" id="gd">
+      <h1>Gradient Descent</h1>
+      <p class="lead">Walk downhill on a loss surface by stepping opposite to the gradient. Step-size (learning rate) makes or breaks it.</p>
+      <div class="card">
+        <canvas id="gd-c" height="430"></canvas>
+        <div class="controls">
+          <div class="ctrl"><label>Learning rate η = <span class="val" id="gd-lrv">0.10</span></label><input type="range" id="gd-lr" min="0.005" max="0.6" step="0.005" value="0.10"></div>
+          <div class="ctrl"><label>Momentum β = <span class="val" id="gd-mv">0.0</span></label><input type="range" id="gd-m" min="0" max="0.99" step="0.01" value="0.0"></div>
+          <div class="ctrl"><label>Surface</label>
+            <select id="gd-surf"><option value="bowl">Quadratic bowl</option><option value="rosen">Rosenbrock</option><option value="saddle">Saddle</option><option value="ravine">Ravine</option></select>
+          </div>
+          <button id="gd-step" class="primary">Step</button>
+          <button id="gd-run">Run 60</button>
+          <button id="gd-reset">Reset</button>
+        </div>
+        <div class="hint">Click on the surface to set the starting point. Too-large η explodes; momentum smooths out ravines.</div>
+      </div>
+    </section>
+
+    <!-- ========================= SGD + SOFTMAX ========================= -->
+    <section class="section" id="sgd">
+      <h1>Softmax Regression with SGD</h1>
+      <p class="lead">Multinomial logistic regression: outputs a probability over <span class="math">K</span> classes via softmax, trained by minimising cross-entropy with mini-batch SGD.</p>
+      <div class="card">
+        <canvas id="sm-c" height="420"></canvas>
+        <div class="controls">
+          <div class="ctrl"><label>Classes = <span class="val" id="sm-kv">3</span></label><input type="range" id="sm-k" min="2" max="5" value="3"></div>
+          <div class="ctrl"><label>η = <span class="val" id="sm-lrv">0.10</span></label><input type="range" id="sm-lr" min="0.005" max="1.0" step="0.005" value="0.10"></div>
+          <div class="ctrl"><label>Batch = <span class="val" id="sm-bv">16</span></label><input type="range" id="sm-b" min="1" max="64" value="16"></div>
+          <button id="sm-step" class="primary">▶ Train</button>
+          <button id="sm-pause">⏸ Pause</button>
+          <button id="sm-reset">Reset</button>
+          <div class="kpi"><b id="sm-loss">—</b><span>cross-entropy</span></div>
+          <div class="kpi"><b id="sm-acc">—</b><span>accuracy</span></div>
+        </div>
+        <div class="hint">Click to add a point of the currently selected class. Linear decision boundaries — softmax can only separate linearly.</div>
+      </div>
+    </section>
+
+    <!-- ========================= ACTIVATION ========================= -->
+    <section class="section" id="act">
+      <h1>Activation Functions</h1>
+      <p class="lead">The non-linearity inside each neuron. Choosing the right one controls saturation, dead units, and gradient flow.</p>
+      <div class="card">
+        <canvas id="act-c" height="380"></canvas>
+        <div class="controls">
+          <button data-act="sigmoid">σ (sigmoid)</button>
+          <button data-act="tanh">tanh</button>
+          <button data-act="relu">ReLU</button>
+          <button data-act="lrelu">LeakyReLU</button>
+          <button data-act="elu">ELU</button>
+          <button data-act="gelu">GELU</button>
+          <button data-act="swish">Swish</button>
+        </div>
+        <div class="legend"><span><i class="dot" style="background:#7cc4ff"></i>f(x)</span><span><i class="dot" style="background:#ff7c9c"></i>f'(x)</span></div>
+        <p class="hint">Sigmoid &amp; tanh saturate ⇒ vanishing gradients. ReLU is cheap but can die. LeakyReLU/ELU/GELU/Swish are common modern choices.</p>
+      </div>
+    </section>
+
+    <!-- ========================= MLP / BACKPROP ========================= -->
+    <section class="section" id="mlp">
+      <h1>MLP &amp; Backpropagation</h1>
+      <p class="lead">A small fully-connected net trained live on a 2-D classification task. Backprop is just chained partial derivatives — watch the boundary curve as gradients flow.</p>
+      <div class="card">
+        <canvas id="mlp-c" height="420"></canvas>
+        <div class="controls">
+          <div class="ctrl"><label>Hidden layers</label>
+            <select id="mlp-arch">
+              <option value="4">1 × 4</option>
+              <option value="8" selected>1 × 8</option>
+              <option value="16">1 × 16</option>
+              <option value="8,8">2 × 8</option>
+              <option value="16,16">2 × 16</option>
+            </select>
+          </div>
+          <div class="ctrl"><label>Activation</label>
+            <select id="mlp-act"><option value="tanh">tanh</option><option value="relu">ReLU</option><option value="sigmoid">sigmoid</option></select>
+          </div>
+          <div class="ctrl"><label>η = <span class="val" id="mlp-lrv">0.05</span></label><input type="range" id="mlp-lr" min="0.005" max="0.5" step="0.005" value="0.05"></div>
+          <div class="ctrl"><label>Dataset</label>
+            <select id="mlp-data"><option value="spirals">Spirals</option><option value="moons">Moons</option><option value="xor">XOR</option><option value="circles">Circles</option></select>
+          </div>
+          <button id="mlp-run" class="primary">▶ Train</button>
+          <button id="mlp-pause">⏸ Pause</button>
+          <button id="mlp-reset">Reset</button>
+          <div class="kpi"><b id="mlp-loss">—</b><span>loss</span></div>
+          <div class="kpi"><b id="mlp-ep">0</b><span>epochs</span></div>
+        </div>
+        <div class="hint">Linear models can't solve XOR or spirals — adding hidden units carves curved boundaries.</div>
+      </div>
+    </section>
+
+    <!-- ========================= DECISION TREE ========================= -->
+    <section class="section" id="dtree">
+      <h1>Decision Trees</h1>
+      <p class="lead">Recursively split feature space along axis-aligned cuts that minimise impurity (Gini / entropy). Each leaf predicts the majority class within its rectangle.</p>
+      <div class="card">
+        <div class="row">
+          <div style="flex:1 1 420px"><canvas id="dt-c" height="400"></canvas></div>
+          <div style="flex:1 1 360px"><canvas id="dt-tree" height="400"></canvas><div class="hint">Tree structure — node labels show split feature &amp; threshold.</div></div>
+        </div>
+        <div class="controls">
+          <div class="ctrl"><label>Max depth = <span class="val" id="dt-dv">4</span></label><input type="range" id="dt-d" min="1" max="10" value="4"></div>
+          <div class="ctrl"><label>Min leaf = <span class="val" id="dt-mv">1</span></label><input type="range" id="dt-m" min="1" max="20" value="1"></div>
+          <div class="ctrl"><label>Criterion</label>
+            <select id="dt-crit"><option value="gini">Gini</option><option value="ent">Entropy</option></select>
+          </div>
+          <div class="ctrl"><label>Add as</label><select id="dt-cls"><option value="0">A</option><option value="1">B</option></select></div>
+          <button id="dt-demo">Sample dataset</button>
+          <button class="danger" id="dt-clear">Clear</button>
+        </div>
+        <div class="hint">Click to add labelled points. Deeper trees fit perfectly on training data — that's over-fitting.</div>
+      </div>
+    </section>
+
+    <!-- ========================= BAGGING ========================= -->
+    <section class="section" id="bagging">
+      <h1>Bagging — Bootstrap Aggregation</h1>
+      <p class="lead">Train many high-variance learners on bootstrap resamples of the data, then average. Variance ↓, bias ≈ unchanged.</p>
+      <div class="card">
+        <canvas id="bag-c" height="400"></canvas>
+        <div class="controls">
+          <div class="ctrl"><label># trees = <span class="val" id="bag-tv">15</span></label><input type="range" id="bag-t" min="1" max="60" value="15"></div>
+          <div class="ctrl"><label>Tree depth = <span class="val" id="bag-dv">6</span></label><input type="range" id="bag-d" min="1" max="10" value="6"></div>
+          <div class="ctrl"><label>Show</label>
+            <select id="bag-show"><option value="avg">Aggregate</option><option value="all">Overlay individual trees</option></select>
+          </div>
+          <button id="bag-demo">Resample data</button>
+        </div>
+        <div class="hint">A single deep tree is wiggly. Averaging many trees on different bootstraps gives a smooth, lower-variance boundary.</div>
+      </div>
+    </section>
+
+    <!-- ========================= RANDOM FOREST ========================= -->
+    <section class="section" id="rf">
+      <h1>Random Forest</h1>
+      <p class="lead">Bagging + random feature subset at each split — de-correlates the trees, reducing ensemble variance further.</p>
+      <div class="card">
+        <canvas id="rf-c" height="400"></canvas>
+        <div class="controls">
+          <div class="ctrl"><label># trees = <span class="val" id="rf-tv">25</span></label><input type="range" id="rf-t" min="1" max="80" value="25"></div>
+          <div class="ctrl"><label>Tree depth = <span class="val" id="rf-dv">6</span></label><input type="range" id="rf-d" min="1" max="10" value="6"></div>
+          <div class="ctrl"><label>Features / split</label>
+            <select id="rf-mtry"><option value="1">1 (√2)</option><option value="2">2 (all)</option></select>
+          </div>
+          <button id="rf-demo">Resample data</button>
+        </div>
+        <div class="hint">In 2-D there are only 2 features, so "feature bagging" is dramatic — boundaries get rounder.</div>
+      </div>
+    </section>
+
+    <!-- ========================= ADABOOST ========================= -->
+    <section class="section" id="boost">
+      <h1>Boosting — AdaBoost</h1>
+      <p class="lead">Sequentially fit weak learners (decision stumps) on re-weighted data — misclassified samples get more attention each round.</p>
+      <div class="card">
+        <canvas id="ab-c" height="400"></canvas>
+        <div class="controls">
+          <div class="ctrl"><label>Round T = <span class="val" id="ab-tv">1</span></label><input type="range" id="ab-t" min="1" max="60" value="1"></div>
+          <button id="ab-play" class="primary">▶ Play</button>
+          <button id="ab-pause">⏸</button>
+          <button id="ab-demo">Resample</button>
+          <div class="kpi"><b id="ab-err">—</b><span>train err</span></div>
+        </div>
+        <div class="hint">Each stump (vertical/horizontal line) is shown faintly. Sample dot size shows current weight — hard examples grow.</div>
+      </div>
+    </section>
+
+    <!-- ========================= KERNEL ========================= -->
+    <section class="section" id="kernel">
+      <h1>The Kernel Trick</h1>
+      <p class="lead">Non-linearly separable data in low dimensions often becomes linearly separable when lifted to higher dimensions. Kernels compute that inner product implicitly — no explicit feature map.</p>
+      <div class="card">
+        <div class="row">
+          <div style="flex:1 1 360px"><canvas id="k2d" height="360"></canvas><div class="hint">2-D view (input space)</div></div>
+          <div style="flex:1 1 360px"><canvas id="k3d" height="360"></canvas><div class="hint">3-D view: φ(x,y) = (x, y, x²+y²) — a paraboloid lift.</div></div>
+        </div>
+        <div class="controls">
+          <div class="ctrl"><label>Rotate = <span class="val" id="k-rv">25°</span></label><input type="range" id="k-r" min="0" max="80" value="25"></div>
+          <div class="ctrl"><label>Lift α = <span class="val" id="k-av">1.0</span></label><input type="range" id="k-a" min="0" max="1.5" step="0.02" value="1.0"></div>
+          <button id="k-demo">Resample</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================= SVM ========================= -->
+    <section class="section" id="svm">
+      <h1>Support Vector Machine</h1>
+      <p class="lead">Maximum-margin linear classifier with slack (soft margin). Only the support vectors determine the boundary.</p>
+      <div class="card">
+        <canvas id="svm-c" height="420"></canvas>
+        <div class="controls">
+          <div class="ctrl"><label>C = <span class="val" id="svm-cv">1.0</span></label><input type="range" id="svm-c1" min="-3" max="3" step="0.05" value="0"></div>
+          <div class="ctrl"><label>Kernel</label>
+            <select id="svm-k"><option value="lin">linear</option><option value="rbf">RBF</option><option value="poly">polynomial (d=3)</option></select>
+          </div>
+          <div class="ctrl"><label>RBF γ = <span class="val" id="svm-gv">1.0</span></label><input type="range" id="svm-g" min="-2" max="2" step="0.05" value="0"></div>
+          <div class="ctrl"><label>Add as</label><select id="svm-cls"><option value="1">+1 (blue)</option><option value="-1">-1 (pink)</option></select></div>
+          <button id="svm-demo">Sample data</button>
+          <button class="danger" id="svm-clear">Clear</button>
+        </div>
+        <div class="hint">Support vectors are circled. With RBF kernel you get curved boundaries — high γ means very local, low γ means smooth.</div>
+      </div>
+    </section>
+
+    <!-- ========================= PCA ========================= -->
+    <section class="section" id="pca">
+      <h1>Principal Component Analysis</h1>
+      <p class="lead">Find orthogonal axes that capture the most variance. Drag points — the principal components rotate to follow the data's spread.</p>
+      <div class="card">
+        <div class="row">
+          <div style="flex:1 1 360px"><canvas id="pca-c" height="360"></canvas><div class="hint">Original 2-D data with PC1 (red) and PC2 (cyan).</div></div>
+          <div style="flex:1 1 360px"><canvas id="pca-proj" height="360"></canvas><div class="hint">Projection onto chosen number of components.</div></div>
+        </div>
+        <div class="controls">
+          <div class="ctrl"><label>Keep components</label>
+            <select id="pca-k"><option value="1">1 (line)</option><option value="2" selected>2 (full)</option></select>
+          </div>
+          <div class="ctrl"><label>Variance explained</label><span class="val" id="pca-var">—</span></div>
+          <button id="pca-demo">Resample</button>
+          <button class="danger" id="pca-clear">Clear</button>
+        </div>
+        <div class="hint">Click to add points or drag existing ones. With k=1 you see the lossy 1-D reconstruction.</div>
+      </div>
+    </section>
+
+    <!-- ========================= MDS ========================= -->
+    <section class="section" id="mds">
+      <h1>Multidimensional Scaling</h1>
+      <p class="lead">Embed objects into 2-D such that pairwise Euclidean distances best match a given dissimilarity matrix. Useful when you only have similarities, not coordinates.</p>
+      <div class="card">
+        <canvas id="mds-c" height="420"></canvas>
+        <div class="controls">
+          <button id="mds-step" class="primary">▶ Iterate</button>
+          <button id="mds-pause">⏸</button>
+          <button id="mds-reset">Re-init</button>
+          <div class="ctrl"><label>Dataset</label>
+            <select id="mds-data"><option value="cities">Mock "cities"</option><option value="grid">Random 3-D grid</option><option value="cluster">3 clusters</option></select>
+          </div>
+          <div class="kpi"><b id="mds-stress">—</b><span>stress</span></div>
+        </div>
+        <div class="hint">Stress is the squared mismatch between target distances and current 2-D distances. SMACOF-style updates pull and push points until it settles.</div>
+      </div>
+    </section>
+
+    <!-- ========================= KMEANS ========================= -->
+    <section class="section" id="kmeans">
+      <h1>k-Means Clustering</h1>
+      <p class="lead">Pick <span class="math">k</span> centroids, assign each point to its nearest one, recompute centroids — repeat until stable. Greedy local-minimum descent on within-cluster sum-of-squares.</p>
+      <div class="card">
+        <canvas id="km-c" height="420"></canvas>
+        <div class="controls">
+          <div class="ctrl"><label>k = <span class="val" id="km-kv">3</span></label><input type="range" id="km-k" min="1" max="8" value="3"></div>
+          <div class="ctrl"><label>Init</label>
+            <select id="km-init"><option value="rand">Random</option><option value="kpp">k-means++</option></select>
+          </div>
+          <button id="km-step" class="primary">▶ Step</button>
+          <button id="km-run">Run to convergence</button>
+          <button id="km-demo">Resample</button>
+          <button id="km-reset">Re-init centroids</button>
+          <div class="kpi"><b id="km-iter">0</b><span>iter</span></div>
+          <div class="kpi"><b id="km-wss">—</b><span>WCSS</span></div>
+        </div>
+        <div class="hint">Click to add a custom point. Bad initial centroids → bad local minimum; try k-means++.</div>
+      </div>
+    </section>
+
+    <!-- ========================= LOGISTIC REGRESSION ========================= -->
+    <section class="section" id="logreg">
+      <h1>Logistic Regression</h1>
+      <p class="lead">Linear classifier with a sigmoid squash. Fit by maximising likelihood (= minimising binary cross-entropy). Output is a probability — perfect when you need calibrated scores.</p>
+      <div class="card">
+        <div class="row">
+          <div style="flex:1 1 360px"><canvas id="lg-c" height="380"></canvas><div class="hint">2-D classifier. White line is the 0.5 boundary; pink/blue gradient is P(y=1|x).</div></div>
+          <div style="flex:1 1 300px"><canvas id="lg-sig" height="380"></canvas><div class="hint">σ(z) curve with marker at the currently hovered point's z = w·x+b.</div></div>
+        </div>
+        <div class="controls">
+          <div class="ctrl"><label>η = <span class="val" id="lg-lrv">0.10</span></label><input type="range" id="lg-lr" min="0.005" max="1" step="0.005" value="0.10"></div>
+          <div class="ctrl"><label>L2 = <span class="val" id="lg-l2v">0.00</span></label><input type="range" id="lg-l2" min="0" max="1" step="0.005" value="0"></div>
+          <div class="ctrl"><label>Add as</label><select id="lg-cls"><option value="0">A (blue)</option><option value="1">B (pink)</option></select></div>
+          <button id="lg-run" class="primary">▶ Train</button>
+          <button id="lg-pause">⏸</button>
+          <button id="lg-demo">Demo data</button>
+          <button class="danger" id="lg-clear">Clear</button>
+          <div class="kpi"><b id="lg-loss">—</b><span>BCE</span></div>
+          <div class="kpi"><b id="lg-acc">—</b><span>acc</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================= CROSS VALIDATION ========================= -->
+    <section class="section" id="cv">
+      <h1>k-Fold Cross-Validation</h1>
+      <p class="lead">Split the data into k folds; train on k-1 and validate on the held-out one. Rotate. The averaged validation error is a less-noisy estimate of test error than a single holdout split.</p>
+      <div class="card">
+        <canvas id="cv-c" height="380"></canvas>
+        <div class="controls">
+          <div class="ctrl"><label>k = <span class="val" id="cv-kv">5</span></label><input type="range" id="cv-k" min="2" max="10" value="5"></div>
+          <div class="ctrl"><label>Current fold = <span class="val" id="cv-fv">0</span></label><input type="range" id="cv-f" min="0" max="4" value="0"></div>
+          <div class="ctrl"><label>Polynomial deg = <span class="val" id="cv-dv">3</span></label><input type="range" id="cv-d" min="1" max="12" value="3"></div>
+          <button id="cv-run" class="primary">Run all folds</button>
+          <button id="cv-demo">Resample data</button>
+          <div class="kpi"><b id="cv-mse">—</b><span>fold MSE</span></div>
+          <div class="kpi"><b id="cv-cv">—</b><span>CV MSE</span></div>
+        </div>
+        <div class="hint">Held-out fold shown in orange. Train MSE on blue, validation MSE on orange. Sweep degree to find the bias/variance sweet spot.</div>
+      </div>
+    </section>
+
+    <!-- ========================= ROC + CONFUSION ========================= -->
+    <section class="section" id="roc">
+      <h1>ROC, PR &amp; Confusion Matrix</h1>
+      <p class="lead">A trained classifier outputs a score; sliding the decision threshold trades false positives against false negatives. ROC plots TPR vs FPR; PR plots precision vs recall.</p>
+      <div class="card">
+        <div class="row">
+          <div style="flex:1 1 240px"><canvas id="rc-hist" height="260"></canvas><div class="hint">Class score histograms — drag the τ slider to move the threshold.</div></div>
+          <div style="flex:1 1 240px"><canvas id="rc-roc" height="260"></canvas><div class="hint">ROC curve. AUC printed below. Current threshold marked.</div></div>
+          <div style="flex:1 1 240px"><canvas id="rc-pr" height="260"></canvas><div class="hint">Precision-Recall curve.</div></div>
+        </div>
+        <div class="controls">
+          <div class="ctrl"><label>Threshold τ = <span class="val" id="rc-tv">0.50</span></label><input type="range" id="rc-t" min="0" max="1" step="0.01" value="0.50"></div>
+          <div class="ctrl"><label>Class separation = <span class="val" id="rc-sv">2.0</span></label><input type="range" id="rc-s" min="0" max="5" step="0.05" value="2.0"></div>
+          <button id="rc-demo">Resample</button>
+        </div>
+        <h3 style="margin-top:18px">Confusion matrix at τ</h3>
+        <canvas id="rc-cm" height="160"></canvas>
+        <div class="legend">
+          <span>Accuracy <b id="rc-acc" style="color:#7cffb2">—</b></span>
+          <span>Precision <b id="rc-pre" style="color:#7cc4ff">—</b></span>
+          <span>Recall <b id="rc-rec" style="color:#ff7c9c">—</b></span>
+          <span>F1 <b id="rc-f1" style="color:#ffb86b">—</b></span>
+          <span>AUC <b id="rc-auc" style="color:#9d7cff">—</b></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================= HIERARCHICAL CLUSTERING ========================= -->
+    <section class="section" id="hc">
+      <h1>Hierarchical Clustering</h1>
+      <p class="lead">Agglomerative: start with each point as its own cluster, repeatedly merge the closest pair. The merge order yields a dendrogram — cut at any height to get a flat clustering.</p>
+      <div class="card">
+        <div class="row">
+          <div style="flex:1 1 360px"><canvas id="hc-c" height="380"></canvas><div class="hint">Click to add points. Lines show last merges.</div></div>
+          <div style="flex:1 1 360px"><canvas id="hc-d" height="380"></canvas><div class="hint">Dendrogram — drag the horizontal cut line via the slider.</div></div>
+        </div>
+        <div class="controls">
+          <div class="ctrl"><label>Linkage</label>
+            <select id="hc-link"><option value="single">single</option><option value="complete">complete</option><option value="avg">average</option><option value="ward">Ward</option></select>
+          </div>
+          <div class="ctrl"><label>Cut height = <span class="val" id="hc-hv">50</span></label><input type="range" id="hc-h" min="0" max="500" value="50"></div>
+          <button id="hc-demo">Demo data</button>
+          <button class="danger" id="hc-clear">Clear</button>
+          <div class="kpi"><b id="hc-nc">—</b><span>clusters</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================= ANOMALY DETECTION ========================= -->
+    <section class="section" id="anom">
+      <h1>Anomaly Detection</h1>
+      <p class="lead">Learn what "normal" looks like, then flag points the model finds surprising. Three classic flavours: Gaussian likelihood, Mahalanobis distance, and a one-class radius around the densest region.</p>
+      <div class="card">
+        <canvas id="anom-c" height="420"></canvas>
+        <div class="controls">
+          <div class="ctrl"><label>Method</label>
+            <select id="anom-m">
+              <option value="gauss">Multivariate Gaussian</option>
+              <option value="maha">Mahalanobis distance</option>
+              <option value="knn">k-NN density (LOF-lite)</option>
+            </select>
+          </div>
+          <div class="ctrl"><label>Contamination = <span class="val" id="anom-cv">5%</span></label><input type="range" id="anom-cc" min="1" max="20" value="5"></div>
+          <div class="ctrl"><label>k (knn) = <span class="val" id="anom-kv">5</span></label><input type="range" id="anom-k" min="2" max="20" value="5"></div>
+          <button id="anom-demo">Resample</button>
+          <button class="danger" id="anom-clear">Clear</button>
+          <div class="kpi"><b id="anom-out">—</b><span>flagged</span></div>
+        </div>
+        <div class="hint">Click to add a single point and see if it's flagged. Heat-map shows the anomaly score across input space; circled points are above the contamination cutoff.</div>
+      </div>
+    </section>
+
+  </main>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
