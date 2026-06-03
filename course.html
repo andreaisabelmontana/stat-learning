@@ -1,0 +1,814 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Course Structure — AI: Statistical Learning &amp; Prediction</title>
+<link rel="stylesheet" href="style.css"/>
+<!-- KaTeX (optional): math renders if it loads, otherwise the $...$ source stays as readable plain text -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});"></script>
+<style>
+/* ---- course-page-specific layout, built on the shared design tokens ---- */
+.course-wrap{max-width:1000px;margin:0 auto;padding:30px 30px 60px}
+.topbar{position:sticky;top:0;z-index:30;background:rgba(11,15,23,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);margin:-30px -30px 24px;padding:14px 30px;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+.topbar .home{font-weight:700;color:var(--ink);margin-right:auto;font-size:15px;letter-spacing:.3px}
+.topbar .home small{display:block;font-weight:400;color:var(--mute);font-size:11px}
+.topbar nav{display:flex;flex-wrap:wrap;gap:4px}
+.topbar nav a{padding:5px 10px;border-radius:6px;font-size:12.5px;color:var(--mute);border:1px solid transparent}
+.topbar nav a:hover{background:#15203a;color:var(--acc);text-decoration:none}
+.topbar nav a.cta{background:#1a2745;border-color:#2a3a63;color:var(--acc)}
+.hero{padding:14px 0 8px}
+.hero h1{font-size:30px;line-height:1.15}
+.hero .sub{color:var(--mute);font-size:15px;max-width:760px}
+.metagrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin:18px 0}
+.metagrid .m{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.metagrid .m span{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:var(--mute)}
+.metagrid .m b{font-size:14px;color:var(--ink);font-weight:600}
+section.block{scroll-margin-top:80px;margin:38px 0}
+section.block > h2{font-size:20px;color:var(--acc);border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:4px}
+.lede{color:var(--mute);max-width:820px;margin:6px 0 16px}
+.objlist{list-style:none;padding:0;display:grid;gap:8px}
+.objlist li{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--acc);border-radius:8px;padding:10px 14px;color:#c5cee0}
+.objlist li b{color:var(--ink)}
+/* % bars */
+.bars{display:grid;gap:10px;margin:14px 0}
+.bar{display:grid;grid-template-columns:210px 1fr 54px;align-items:center;gap:12px}
+.bar .lab{font-size:13px;color:#c5cee0}
+.bar .track{background:#0c1220;border:1px solid var(--line);border-radius:99px;height:16px;overflow:hidden}
+.bar .fill{height:100%;background:linear-gradient(90deg,#3a5fbd,#7cc4ff);border-radius:99px}
+.bar .pct{text-align:right;font-variant-numeric:tabular-nums;color:var(--acc);font-weight:600;font-size:13px}
+.bar.alt .fill{background:linear-gradient(90deg,#6b4bbd,#9d7cff)}
+.cardgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;margin:14px 0}
+.assess{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}
+.assess .head{display:flex;justify-content:space-between;align-items:baseline}
+.assess h4{margin:0;font-size:14px;color:var(--ink)}
+.assess .w{font-size:20px;font-weight:700;color:var(--acc)}
+.assess p{font-size:12.5px;color:var(--mute);margin:8px 0 0}
+.note{background:#15203a;border:1px solid #2a3a63;border-radius:8px;padding:12px 14px;margin:14px 0;font-size:13px;color:#c5cee0}
+.note b{color:var(--warn)}
+/* module + timeline */
+.module{border:1px solid var(--line);border-radius:12px;margin:18px 0;overflow:hidden;background:var(--panel2)}
+.module > header{padding:16px 18px;background:linear-gradient(180deg,#13203b,#0f1830);border-bottom:1px solid var(--line)}
+.module > header .eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:1.4px;color:var(--acc2);font-weight:700}
+.module > header h3{font-size:18px;margin:4px 0 6px;color:var(--ink);text-transform:none;letter-spacing:0}
+.module > header .mrange{font-size:12px;color:var(--mute)}
+.module > header p{font-size:13px;color:#c5cee0;margin:8px 0 0;max-width:820px}
+.outcomes{margin:10px 0 0;padding:10px 14px;background:#0c1220;border:1px solid var(--line);border-radius:8px}
+.outcomes .t{font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:var(--mute);font-weight:600;margin-bottom:4px}
+.outcomes ul{margin:0;padding-left:18px;font-size:12.5px}
+.timeline{padding:6px 18px 18px}
+.sess{position:relative;padding:16px 0 16px 46px;border-bottom:1px dashed var(--line)}
+.sess:last-child{border-bottom:0}
+.sess .num{position:absolute;left:0;top:16px;width:34px;height:34px;border-radius:50%;background:#1a2745;border:1px solid #2a3a63;color:var(--acc);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center}
+.sess.exam .num{background:#3b1a26;border-color:#6b2840;color:#ffb6c8}
+.sess.cap .num{background:#13322a;border-color:#22624a;color:var(--ok)}
+.sess h4{margin:0 0 2px;font-size:15px;color:var(--ink);text-transform:none;letter-spacing:0}
+.sess .obj{font-size:12.5px;color:var(--mute);font-style:italic;margin:0 0 8px}
+.sess .topic{margin:8px 0}
+.sess .topic .tt{font-weight:600;color:#cfe3ff;font-size:13px}
+.sess .topic p{font-size:12.5px;color:#c5cee0;margin:3px 0 0}
+.formula{background:#0c1220;border:1px solid var(--line);border-left:3px solid var(--acc2);border-radius:6px;padding:8px 12px;margin:8px 0;font-size:13px;color:#cfe3ff;overflow-x:auto}
+.formula .cap{display:block;font-size:11px;color:var(--mute);font-style:normal;margin-top:4px}
+.keyidea{background:#13241c;border:1px solid #22624a;border-radius:6px;padding:8px 12px;margin:8px 0;font-size:12.5px;color:#d5f3e3}
+.keyidea b{color:var(--ok)}
+.readings{margin:8px 0 0;padding-left:0;list-style:none}
+.readings li{font-size:12px;color:var(--mute);padding:3px 0 3px 16px;position:relative}
+.readings li:before{content:"›";position:absolute;left:0;color:var(--acc)}
+.readings li b{color:#c5cee0}
+.demolink{display:inline-flex;gap:6px;align-items:center;background:#172238;border:1px solid #2a3a63;color:var(--acc);padding:3px 10px;border-radius:99px;font-size:11.5px;margin:6px 6px 0 0}
+.demolink:hover{background:#22305a;text-decoration:none}
+.demolink:before{content:"▶";font-size:8px}
+/* glossary */
+.glossary{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
+.glossary dt{font-weight:700;color:var(--acc);font-size:13px}
+.glossary dd{margin:2px 0 0;font-size:12.5px;color:#c5cee0}
+.glossary .term{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+/* bibliography */
+.bib{display:grid;gap:12px}
+.bib .ref{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.bib .ref .ttl{font-weight:600;color:var(--ink)}
+.bib .ref .meta{font-size:12px;color:var(--mute);margin:2px 0 6px}
+.bib .ref p{font-size:12.5px;color:#c5cee0;margin:0}
+.toc{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 0}
+.toc a{background:#172238;border:1px solid #2a3a63;color:var(--ink);padding:4px 10px;border-radius:99px;font-size:12px}
+.toc a:hover{background:#22305a;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="course-wrap">
+
+  <!-- ===================== TOP BAR / NAV ===================== -->
+  <div class="topbar">
+    <div class="home">AI: Statistical Learning &amp; Prediction<small>Course structure &amp; syllabus</small></div>
+    <nav>
+      <a href="./index.html">← Interactive demos</a>
+      <a href="#overview">Overview</a>
+      <a href="#objectives">Objectives</a>
+      <a href="#methodology">Methodology</a>
+      <a href="#assessment">Assessment</a>
+      <a href="#program">Program</a>
+      <a href="#glossary">Glossary</a>
+      <a href="#bibliography">Bibliography</a>
+      <a class="cta" href="./SYLLABUS.pdf" target="_blank" rel="noopener">SYLLABUS.pdf ↗</a>
+    </nav>
+  </div>
+
+  <!-- ===================== HERO ===================== -->
+  <header class="hero">
+    <h1>Course Structure</h1>
+    <p class="sub">A full, syllabus-driven map of <b>AI: Statistical Learning &amp; Prediction</b> — every module and all 30 sessions, with the core idea, the key formula, and pointers to the matching interactive demo. Use this page to study ahead, review, and connect the live visualisations on the <a href="./index.html">demos page</a> to where they appear in the course.</p>
+
+    <div class="metagrid">
+      <div class="m"><span>Code</span><b>AISLP-CSAI.3.M.B</b></div>
+      <div class="m"><span>Degree</span><b>BCSAI (Year 3)</b></div>
+      <div class="m"><span>Area</span><b>Computer Science</b></div>
+      <div class="m"><span>Credits</span><b>6.0 ECTS</b></div>
+      <div class="m"><span>Sessions</span><b>30 (live in-person)</b></div>
+      <div class="m"><span>Semester</span><b>2nd · AY 25–26</b></div>
+      <div class="m"><span>Category</span><b>Compulsory</b></div>
+      <div class="m"><span>Language</span><b>English</b></div>
+      <div class="m"><span>Workload</span><b>150 hours</b></div>
+      <div class="m"><span>Professor</span><b>Luciano Dyballa</b></div>
+    </div>
+    <div class="toc">
+      <a href="#mod1">1 · Foundations &amp; Neural Nets</a>
+      <a href="#mod2">2 · Review &amp; Midterm</a>
+      <a href="#mod3">3 · Trees, Losses &amp; Bias–Variance</a>
+      <a href="#mod4">4 · Ensembles</a>
+      <a href="#mod5">5 · Kernels &amp; SVMs</a>
+      <a href="#mod6">6 · Clustering</a>
+      <a href="#mod7">7 · Dimensionality Reduction</a>
+      <a href="#mod8">8 · Topics in Deep Learning</a>
+      <a href="#mod9">9 · Projects &amp; Final</a>
+    </div>
+  </header>
+
+  <!-- ===================== OVERVIEW ===================== -->
+  <section class="block" id="overview">
+    <h2>Overview</h2>
+    <p class="lede">This course introduces some of the fundamental algorithms in machine learning, with an emphasis on their <b>theoretical foundations and underlying mathematical principles</b>. Examples using a variety of datasets are presented to build intuition for how the different methods work, and assignments give hands-on experience applying the methods to different types of data. Topics include nearest neighbours, neural networks, support vector machines, trees, clustering, dimensionality reduction, and generative models. Many lectures include a short coding demo in Python.</p>
+    <div class="note"><b>Tentative pacing.</b> The syllabus notes that the topic schedule is tentative: the instructor aims to cover all listed topics (and may add advanced material), but the pace adapts to group performance, so some sessions may shift.</div>
+    <div class="cardgrid">
+      <div class="assess"><div class="head"><h4>Format</h4></div><p>30 live in-person sessions combining theory, worked examples, and short Python coding demos. Most new techniques are followed immediately by one or more examples.</p></div>
+      <div class="assess"><div class="head"><h4>Prerequisites</h4></div><p>Calculus for CS · Matrices &amp; Linear Transformations · Probability for CS · Machine Learning Foundations · Computer Programming II.</p></div>
+      <div class="assess"><div class="head"><h4>Instructor</h4></div><p>Luciano Dyballa, Assistant Professor (School of Science &amp; Technology). Ph.D. Computer Science, Yale — machine learning, vision, computational neuroscience. Contact: <a href="mailto:ldyballa@faculty.ie.edu">ldyballa@faculty.ie.edu</a> (office hours on request).</p></div>
+      <div class="assess"><div class="head"><h4>Companion demos</h4></div><p>The <a href="./index.html">interactive demos page</a> mirrors this syllabus: k-NN, regression, bias–variance, gradient descent, MLP/backprop, trees, bagging, random forest, AdaBoost, kernels, SVM, PCA, MDS, k-means, hierarchical clustering and more — all running client-side.</p></div>
+    </div>
+  </section>
+
+  <!-- ===================== LEARNING OBJECTIVES ===================== -->
+  <section class="block" id="objectives">
+    <h2>Learning Objectives</h2>
+    <p class="lede">By the end of the course, students should be able to:</p>
+    <ul class="objlist">
+      <li><b>Consolidate the core ML framework</b> — regression vs. classification, cross-validation, overfitting, the bias–variance tradeoff, and regularization.</li>
+      <li><b>Master a range of algorithms</b> in detail — k-nearest neighbours, SVMs, multi-layer perceptrons, deep networks, trees and forests, and more.</li>
+      <li><b>Select and assess models</b> — choose an appropriate algorithm for a specific problem and adequately evaluate its performance.</li>
+      <li><b>Understand deep learning</b> — the principles and the practical challenges of training neural networks for deep learning.</li>
+      <li><b>Implement in Python</b> — demonstrate proficiency implementing ML algorithms in the Python programming language.</li>
+    </ul>
+  </section>
+
+  <!-- ===================== METHODOLOGY ===================== -->
+  <section class="block" id="methodology">
+    <h2>Teaching Methodology</h2>
+    <p class="lede">Before each class, students prepare assignments and readings at home. Lectures combine theoretical explanation with practical examples and a short coding demonstration. Active in-class participation is essential to acquiring the skills to understand, implement, and apply each algorithm. <b>Problem sets</b> build intuition behind the theory and the coding skills to implement the algorithms; <b>brief quizzes</b> throughout the semester check understanding of previously taught material and let the instructor track the class's progress.</p>
+
+    <h3 style="color:var(--mute)">Learning-activity weighting &amp; estimated time (150 h total)</h3>
+    <div class="bars">
+      <div class="bar"><span class="lab">Lectures</span><div class="track"><div class="fill" style="width:30%"></div></div><span class="pct">30.0%</span></div>
+      <div class="bar"><span class="lab">Individual studying</span><div class="track"><div class="fill" style="width:30%"></div></div><span class="pct">30.0%</span></div>
+      <div class="bar"><span class="lab">Exercises / async / field work</span><div class="track"><div class="fill" style="width:20%"></div></div><span class="pct">20.0%</span></div>
+      <div class="bar"><span class="lab">Discussions</span><div class="track"><div class="fill" style="width:13.3%"></div></div><span class="pct">13.3%</span></div>
+      <div class="bar"><span class="lab">Group work</span><div class="track"><div class="fill" style="width:6.7%"></div></div><span class="pct">6.7%</span></div>
+    </div>
+    <p class="muted" style="font-size:12px">Estimated student time: Lectures 45 h · Individual studying 45 h · Exercises/async/field work 30 h · Discussions 20 h · Group work 10 h.</p>
+
+    <div class="note"><b>GenAI policy.</b> Generative-AI tools may be used for some specific tasks/assignments <i>with appropriate acknowledgment</i>, but <u>not</u> in group projects, quizzes, or exams. Inappropriate use of AI-generated content is treated as academic misconduct and may result in failing the assignment or the course. The syllabus provides a suggested acknowledgment template; acknowledging AI does not affect your grade. All written work (including code) must be your own — credit any hints or solutions from peers or outside sources.</div>
+  </section>
+
+  <!-- ===================== ASSESSMENT ===================== -->
+  <section class="block" id="assessment">
+    <h2>Assessment</h2>
+    <p class="lede">Continuous evaluation across four components:</p>
+    <div class="bars">
+      <div class="bar alt"><span class="lab">Final Exam</span><div class="track"><div class="fill" style="width:40%"></div></div><span class="pct">40%</span></div>
+      <div class="bar alt"><span class="lab">Midterm Exam</span><div class="track"><div class="fill" style="width:25%"></div></div><span class="pct">25%</span></div>
+      <div class="bar alt"><span class="lab">Group Project</span><div class="track"><div class="fill" style="width:25%"></div></div><span class="pct">25%</span></div>
+      <div class="bar alt"><span class="lab">Class Participation</span><div class="track"><div class="fill" style="width:10%"></div></div><span class="pct">10%</span></div>
+    </div>
+
+    <div class="cardgrid">
+      <div class="assess"><div class="head"><h4>Final Exam</h4><div class="w">40%</div></div><p>You must score at least <b>3.5</b> on the final exam to pass the course overall — even if your other assessments would otherwise be passing.</p></div>
+      <div class="assess"><div class="head"><h4>Midterm Exam</h4><div class="w">25%</div></div><p>Held in Session 8, covering the foundations and neural-network material from Sessions 1–7.</p></div>
+      <div class="assess"><div class="head"><h4>Group Project</h4><div class="w">25%</div></div><p>A written report plus an in-class presentation (Sessions 28–29). GenAI may not be used.</p></div>
+      <div class="assess"><div class="head"><h4>Class Participation</h4><div class="w">10%</div></div><p>Selected exercises turned in throughout the course (may be presented in class), plus active participation, questions/remarks, punctuality, and class conduct.</p></div>
+    </div>
+
+    <h3 style="color:var(--mute)">Pass, attendance &amp; re-sit rules</h3>
+    <ul class="objlist">
+      <li><b>Minimum on the final:</b> a final-exam score of at least 3.5 is required to pass the course, regardless of other components.</li>
+      <li><b>80% attendance rule:</b> students who do not meet 80% attendance fail <i>both</i> the ordinary and extraordinary calls for the year and must re-enrol (re-take) the next academic year — with no re-sit opportunity.</li>
+      <li><b>Four chances:</b> each student has four calls to pass a course, spread over two consecutive academic years (ordinary + extraordinary re-sits in June/July).</li>
+      <li><b>Re-sit (extraordinary call):</b> a single comprehensive exam; continuous-evaluation grades are <i>not</i> carried over. Pass mark is 5; the maximum attainable grade is 8.0 ("notable"). Requires physical presence at your campus (Segovia or Madrid); dates/format are fixed.</li>
+      <li><b>Retakers (3rd call):</b> must check the assigned professor's syllabus and contact them about specific criteria; maximum grade in the retake is 10.0.</li>
+      <li><b>Grade review &amp; appeals:</b> a review session follows grading; you must attend it before any grade appeal. Failing more than 18 ECTS in the year after the June–July re-sits leads to being asked to leave the program.</li>
+    </ul>
+  </section>
+
+  <!-- ===================== PROGRAM ===================== -->
+  <section class="block" id="program">
+    <h2>Program — all 30 sessions</h2>
+    <p class="lede">The 30 sessions are grouped below into nine thematic modules. Each session lists its objective, per-topic explanations, the core formula or definition where the material is technical, a "key idea" takeaway, suggested readings, and links to the matching interactive demo.</p>
+
+    <!-- ============ MODULE 1 ============ -->
+    <div class="module" id="mod1">
+      <header>
+        <div class="eyebrow">Module 1</div>
+        <h3>Foundations &amp; Neural Networks</h3>
+        <div class="mrange">Sessions 1–6 · from nearest neighbours to deep networks</div>
+        <p>Establishes the supervised-learning setting and quickly builds the neural-network toolkit: linear classifiers and the perceptron, the multi-layer perceptron, the loss/activation choices that shape training, and the optimisation machinery (gradient descent and backpropagation) that makes deep networks work.</p>
+        <div class="outcomes"><div class="t">Module learning outcomes</div><ul>
+          <li>Explain the curse of dimensionality and when distance-based methods break down.</li>
+          <li>Derive the perceptron update and connect it to linear decision boundaries.</li>
+          <li>Build and train an MLP, choosing appropriate loss and activation functions.</li>
+          <li>Run gradient descent and backpropagation by hand on a small network.</li>
+        </ul></div>
+      </header>
+      <div class="timeline">
+
+        <div class="sess">
+          <div class="num">1</div>
+          <h4>Introduction · Nearest neighbours · Curse of dimensionality</h4>
+          <p class="obj">Objective: frame the supervised-learning problem and meet the simplest non-parametric classifier.</p>
+          <div class="topic"><span class="tt">Introduction</span><p>The learning setting: features $x$, targets $y$, a hypothesis class, and the goal of generalising to unseen data. Regression vs. classification; training vs. test error.</p></div>
+          <div class="topic"><span class="tt">Nearest neighbours</span><p>A lazy, non-parametric rule: predict using the $k$ closest training points under a distance metric. No training phase — all computation happens at query time. Small $k$ gives a jagged, high-variance boundary; large $k$ smooths but biases it.</p>
+            <div class="formula">$\hat{y}(x)=\text{majority vote of }\{y_i : x_i \in N_k(x)\},\quad d(x,x_i)=\lVert x-x_i\rVert_2$<span class="cap">k-NN prediction: vote among the $k$ nearest neighbours under Euclidean (or other) distance.</span></div>
+          </div>
+          <div class="topic"><span class="tt">Curse of dimensionality</span><p>In high dimensions, data becomes sparse and almost all points are roughly equidistant, so "nearest" loses meaning and volume concentrates in thin shells — distance-based methods degrade and require exponentially more data.</p></div>
+          <div class="keyidea"><b>Key idea:</b> k-NN trades zero training cost for expensive, distance-sensitive prediction — and that distance metric collapses as dimensionality grows.</div>
+          <a class="demolink" href="./index.html#knn" target="_blank" rel="noopener">k-NN demo</a>
+          <ul class="readings"><li><b>ESL</b> ch. 2 (statistical learning, k-NN, curse of dimensionality)</li><li><b>ESL</b> §13.3 — k-nearest-neighbour classifiers</li></ul>
+        </div>
+
+        <div class="sess">
+          <div class="num">2</div>
+          <h4>Review of linear classifiers · The perceptron</h4>
+          <p class="obj">Objective: recall linear decision boundaries and meet the perceptron learning rule.</p>
+          <div class="topic"><span class="tt">Linear classifiers</span><p>A hyperplane $w^\top x + b = 0$ separates the input space; the sign of the score decides the class. Geometry of weight vectors, bias/offset, and margins.</p>
+            <div class="formula">$\hat{y}=\operatorname{sign}(w^\top x + b)$<span class="cap">Linear classifier: predict by the sign of the signed distance to the hyperplane.</span></div>
+          </div>
+          <div class="topic"><span class="tt">The perceptron</span><p>An online, mistake-driven algorithm: on each misclassified example, nudge the weights toward correctness. Guaranteed to converge if the data is linearly separable.</p>
+            <div class="formula">$w \leftarrow w + \eta\,(y_i - \hat{y}_i)\,x_i$<span class="cap">Perceptron update — applied only on misclassified points.</span></div>
+          </div>
+          <div class="keyidea"><b>Key idea:</b> the perceptron is the atomic building block of neural nets — a single linear unit with a step nonlinearity, trained by correcting its own mistakes.</div>
+          <a class="demolink" href="./index.html#logreg" target="_blank" rel="noopener">Logistic regression demo</a>
+          <ul class="readings"><li><b>ESL</b> §4.5 — separating hyperplanes &amp; the perceptron</li><li><b>Nielsen</b> ch. 1 — perceptrons &amp; sigmoid neurons</li></ul>
+        </div>
+
+        <div class="sess">
+          <div class="num">3</div>
+          <h4>Intro to neural nets · Multi-layer perceptron</h4>
+          <p class="obj">Objective: stack neurons into layers to represent non-linear functions.</p>
+          <div class="topic"><span class="tt">Intro to neural nets</span><p>Neurons as weighted sums passed through a nonlinearity; layers as composed transformations. Why a single linear layer cannot solve XOR.</p></div>
+          <div class="topic"><span class="tt">Multi-layer perceptron (MLP)</span><p>A feed-forward network of fully-connected layers. Hidden layers learn intermediate representations, giving the universal-approximation capacity to carve curved boundaries.</p>
+            <div class="formula">$h^{(l)} = \sigma\!\left(W^{(l)} h^{(l-1)} + b^{(l)}\right)$<span class="cap">Forward pass: each layer is an affine map followed by an elementwise activation $\sigma$.</span></div>
+          </div>
+          <div class="keyidea"><b>Key idea:</b> depth + nonlinearity = expressive power. Hidden units let the network bend straight boundaries into the shapes the data needs.</div>
+          <a class="demolink" href="./index.html#mlp" target="_blank" rel="noopener">MLP &amp; backprop demo</a>
+          <a class="demolink" href="./index.html#act" target="_blank" rel="noopener">Activation functions demo</a>
+          <ul class="readings"><li><b>Nielsen</b> ch. 1–2 — feed-forward nets</li><li><b>Deep Learning</b> ch. 6 — deep feed-forward networks</li></ul>
+        </div>
+
+        <div class="sess">
+          <div class="num">4</div>
+          <h4>Loss functions, activation functions · Gradient descent</h4>
+          <p class="obj">Objective: define what to minimise and how to start minimising it.</p>
+          <div class="topic"><span class="tt">Loss functions</span><p>How wrong a prediction is: squared error (L2) for regression, cross-entropy/log-loss for classification, hinge for SVMs. L2 is outlier-sensitive; L1 is robust but non-smooth; Huber blends the two.</p>
+            <div class="formula">$\mathcal{L}_{\text{CE}} = -\frac{1}{n}\sum_i \big[y_i\log\hat{p}_i + (1-y_i)\log(1-\hat{p}_i)\big]$<span class="cap">Binary cross-entropy — the loss behind logistic regression and classification nets.</span></div>
+          </div>
+          <div class="topic"><span class="tt">Activation functions</span><p>Sigmoid and tanh saturate (vanishing gradients); ReLU is cheap but can "die"; LeakyReLU/ELU/GELU/Swish are modern fixes that keep gradients flowing.</p></div>
+          <div class="topic"><span class="tt">Gradient descent</span><p>Move parameters opposite the gradient of the loss. Learning rate controls step size — too large diverges, too small crawls.</p>
+            <div class="formula">$\theta \leftarrow \theta - \eta\,\nabla_\theta \mathcal{L}(\theta)$<span class="cap">Gradient-descent update with learning rate $\eta$.</span></div>
+          </div>
+          <div class="keyidea"><b>Key idea:</b> the loss defines the objective; the activation shapes the gradient landscape; the learning rate decides whether you reach the bottom of it.</div>
+          <a class="demolink" href="./index.html#loss" target="_blank" rel="noopener">Loss functions demo</a>
+          <a class="demolink" href="./index.html#act" target="_blank" rel="noopener">Activations demo</a>
+          <a class="demolink" href="./index.html#gd" target="_blank" rel="noopener">Gradient descent demo</a>
+          <ul class="readings"><li><b>Deep Learning</b> §4.3, ch. 6.2 — gradient-based optimisation &amp; output units</li><li><b>Nielsen</b> ch. 3 — the cross-entropy cost</li></ul>
+        </div>
+
+        <div class="sess">
+          <div class="num">5</div>
+          <h4>Backpropagation</h4>
+          <p class="obj">Objective: compute gradients through a deep network efficiently.</p>
+          <div class="topic"><span class="tt">Backpropagation</span><p>The chain rule applied layer-by-layer: a forward pass caches activations, then errors are propagated backward to give every weight's gradient in one sweep. This is what makes training deep nets tractable.</p>
+            <div class="formula">$\delta^{(l)} = \big(W^{(l+1)\top}\delta^{(l+1)}\big)\odot\sigma'\!\big(z^{(l)}\big),\qquad \frac{\partial \mathcal{L}}{\partial W^{(l)}} = \delta^{(l)} \, h^{(l-1)\top}$<span class="cap">Backprop: recursively propagate the error signal $\delta$, then read off weight gradients.</span></div>
+          </div>
+          <div class="keyidea"><b>Key idea:</b> backprop is just the chain rule organised so that each gradient is computed exactly once — reverse-mode automatic differentiation.</div>
+          <a class="demolink" href="./index.html#mlp" target="_blank" rel="noopener">MLP &amp; backprop demo</a>
+          <ul class="readings"><li><b>Nielsen</b> ch. 2 — how backpropagation works</li><li><b>Deep Learning</b> §6.5 — back-propagation</li></ul>
+        </div>
+
+        <div class="sess">
+          <div class="num">6</div>
+          <h4>Vanishing/exploding gradients · Improving MLPs · Deep networks</h4>
+          <p class="obj">Objective: understand why deep nets are hard to train and how to fix it.</p>
+          <div class="topic"><span class="tt">Vanishing/exploding gradients</span><p>Repeated multiplication of derivatives through many layers shrinks or blows up the gradient signal, stalling or destabilising training — especially with saturating activations.</p></div>
+          <div class="topic"><span class="tt">Improving MLPs</span><p>Practical remedies: better activations (ReLU family), careful weight initialisation (Xavier/He), normalisation, regularization (L2, dropout), and adaptive optimisers (momentum, Adam).</p></div>
+          <div class="topic"><span class="tt">Deep networks</span><p>Why depth helps representationally, and the engineering needed to make many layers trainable in practice.</p></div>
+          <div class="keyidea"><b>Key idea:</b> depth is powerful but fragile — activation choice, initialisation, normalisation, and optimiser turn an untrainable deep net into a working one.</div>
+          <a class="demolink" href="./index.html#act" target="_blank" rel="noopener">Activations demo</a>
+          <a class="demolink" href="./index.html#sgd" target="_blank" rel="noopener">SGD &amp; softmax demo</a>
+          <ul class="readings"><li><b>Nielsen</b> ch. 5 — why deep nets are hard to train</li><li><b>Deep Learning</b> ch. 8 — optimisation for training deep models</li></ul>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ============ MODULE 2 ============ -->
+    <div class="module" id="mod2">
+      <header>
+        <div class="eyebrow">Module 2</div>
+        <h3>Consolidation &amp; Midterm</h3>
+        <div class="mrange">Sessions 7–8 · review and first checkpoint</div>
+        <p>A consolidation session with exercises pulling together the neural-network material, followed by the midterm exam.</p>
+        <div class="outcomes"><div class="t">Module learning outcomes</div><ul>
+          <li>Integrate the foundations + neural-network material into one mental model.</li>
+          <li>Apply the methods to fresh exercises under exam conditions.</li>
+        </ul></div>
+      </header>
+      <div class="timeline">
+        <div class="sess">
+          <div class="num">7</div>
+          <h4>Neural networks review · Exercises</h4>
+          <p class="obj">Objective: consolidate Sessions 1–6 through worked problems.</p>
+          <div class="topic"><span class="tt">Review &amp; exercises</span><p>End-to-end recap: from the supervised setting and k-NN through perceptrons, MLPs, losses/activations, gradient descent, backprop, and the training pathologies of deep nets — practised on exercises.</p></div>
+          <div class="keyidea"><b>Key idea:</b> a single coherent pipeline — represent, score, lose, differentiate, update — underlies everything seen so far.</div>
+          <a class="demolink" href="./index.html#mlp" target="_blank" rel="noopener">MLP demo</a>
+          <a class="demolink" href="./index.html#gd" target="_blank" rel="noopener">Gradient descent demo</a>
+          <ul class="readings"><li>Review <b>Nielsen</b> ch. 1–3 &amp; <b>Deep Learning</b> ch. 6</li></ul>
+        </div>
+        <div class="sess exam">
+          <div class="num">8</div>
+          <h4>Midterm Exam</h4>
+          <p class="obj">Objective: assess mastery of foundations and neural networks. <b>Worth 25% of the overall grade.</b></p>
+          <div class="topic"><span class="tt">Coverage</span><p>Material from Sessions 1–7: supervised learning, k-NN, curse of dimensionality, linear classifiers/perceptron, MLPs, loss &amp; activation functions, gradient descent, backpropagation, and deep-network training issues.</p></div>
+          <div class="keyidea"><b>Key idea:</b> the midterm rewards conceptual derivations and the ability to reason about model behaviour, not just recall.</div>
+          <ul class="readings"><li>Cumulative review of all Module 1 readings</li></ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ MODULE 3 ============ -->
+    <div class="module" id="mod3">
+      <header>
+        <div class="eyebrow">Module 3</div>
+        <h3>Trees, Losses &amp; the Bias–Variance Decomposition</h3>
+        <div class="mrange">Sessions 9–13 · classical supervised learning &amp; theory</div>
+        <p>Moves to interpretable tree models and the linear SVM, then formalises the theory tying them together: the choice of loss and regularizer, and the bias–variance decomposition that explains over- and under-fitting.</p>
+        <div class="outcomes"><div class="t">Module learning outcomes</div><ul>
+          <li>Grow and prune a decision tree using impurity-based splits.</li>
+          <li>Formulate the linear SVM as a margin-maximisation problem with slack.</li>
+          <li>Choose losses and regularizers and explain their effect on the solution.</li>
+          <li>Decompose expected test error into bias, variance, and noise.</li>
+        </ul></div>
+      </header>
+      <div class="timeline">
+
+        <div class="sess">
+          <div class="num">9</div>
+          <h4>Decision trees</h4>
+          <p class="obj">Objective: learn axis-aligned, interpretable partitions of feature space.</p>
+          <div class="topic"><span class="tt">Decision trees</span><p>Recursively split on the feature/threshold that most reduces impurity; each leaf predicts the majority class (or mean) of its region. Deep trees overfit; pruning / depth limits control complexity.</p>
+            <div class="formula">$\text{Gini}(t)=1-\sum_{c} p_{c}^2,\qquad H(t)=-\sum_{c} p_c\log p_c$<span class="cap">Node impurity measures — splits are chosen to maximise the weighted impurity decrease.</span></div>
+          </div>
+          <div class="keyidea"><b>Key idea:</b> trees are greedy, high-variance, perfectly interpretable — and the ideal base learner for the ensembles to come.</div>
+          <a class="demolink" href="./index.html#dtree" target="_blank" rel="noopener">Decision tree demo</a>
+          <ul class="readings"><li><b>ESL</b> §9.2 — tree-based methods (CART)</li></ul>
+        </div>
+
+        <div class="sess">
+          <div class="num">10</div>
+          <h4>Linear SVMs</h4>
+          <p class="obj">Objective: find the maximum-margin separating hyperplane.</p>
+          <div class="topic"><span class="tt">Linear SVMs</span><p>Among all separating hyperplanes, choose the one that maximises the margin — the distance to the closest points (support vectors). Maximising the margin is minimising $\lVert w\rVert$.</p>
+            <div class="formula">$\min_{w,b}\tfrac12\lVert w\rVert^2 \;\text{ s.t. }\; y_i(w^\top x_i + b)\ge 1\;\;\forall i$<span class="cap">Hard-margin SVM: the margin equals $2/\lVert w\rVert$.</span></div>
+          </div>
+          <div class="keyidea"><b>Key idea:</b> only the support vectors matter; the widest "street" between classes is the most robust boundary.</div>
+          <a class="demolink" href="./index.html#svm" target="_blank" rel="noopener">SVM demo</a>
+          <ul class="readings"><li><b>ESL</b> §12.1–12.2 — support vector classifiers</li></ul>
+        </div>
+
+        <div class="sess">
+          <div class="num">11</div>
+          <h4>Linear SVMs part II</h4>
+          <p class="obj">Objective: handle non-separable data with soft margins and the dual.</p>
+          <div class="topic"><span class="tt">Soft-margin SVM</span><p>Introduce slack variables $\xi_i$ to allow violations, controlled by penalty $C$ — large $C$ ≈ hard margin (low bias, high variance), small $C$ tolerates more errors for a wider margin. Equivalent to hinge loss + L2.</p>
+            <div class="formula">$\min_{w,b}\tfrac12\lVert w\rVert^2 + C\sum_i \xi_i \;\text{ s.t. }\; y_i(w^\top x_i+b)\ge 1-\xi_i,\;\xi_i\ge0$<span class="cap">Soft-margin (C-SVM): trade margin width against classification violations.</span></div>
+          </div>
+          <div class="topic"><span class="tt">Dual formulation</span><p>The Lagrangian dual expresses the solution purely through inner products of data points — setting up the kernel trick in Module 5.</p></div>
+          <div class="keyidea"><b>Key idea:</b> $C$ is the SVM's bias–variance dial, and the dual's reliance on inner products is exactly the door kernels walk through.</div>
+          <a class="demolink" href="./index.html#svm" target="_blank" rel="noopener">SVM demo (try the C slider)</a>
+          <ul class="readings"><li><b>ESL</b> §12.2–12.3 — SVMs &amp; the optimisation problem</li></ul>
+        </div>
+
+        <div class="sess">
+          <div class="num">12</div>
+          <h4>Losses and regularizers</h4>
+          <p class="obj">Objective: unify models through their loss + penalty.</p>
+          <div class="topic"><span class="tt">Losses</span><p>A common lens: squared, logistic, hinge, absolute. Each defines a different notion of "wrong" and a different optimum.</p></div>
+          <div class="topic"><span class="tt">Regularizers</span><p>Penalise coefficient magnitude to trade bias for reduced variance. Ridge (L2) shrinks smoothly; Lasso (L1) drives coefficients to exactly zero, performing feature selection.</p>
+            <div class="formula">$\hat{\beta}=\arg\min_\beta \;\lVert y - X\beta\rVert_2^2 + \lambda\,\lVert\beta\rVert_2^2 \;(\text{ridge}),\qquad +\,\lambda\lVert\beta\rVert_1\;(\text{lasso})$<span class="cap">Penalised regression: $\lambda$ controls the strength of shrinkage.</span></div>
+          </div>
+          <div class="keyidea"><b>Key idea:</b> "model = loss + regularizer." L2 shrinks; L1 selects. Tuning $\lambda$ is tuning complexity.</div>
+          <a class="demolink" href="./index.html#reg" target="_blank" rel="noopener">Regularization demo</a>
+          <a class="demolink" href="./index.html#loss" target="_blank" rel="noopener">Loss functions demo</a>
+          <ul class="readings"><li><b>ESL</b> §3.4 — shrinkage methods (ridge, lasso)</li></ul>
+        </div>
+
+        <div class="sess">
+          <div class="num">13</div>
+          <h4>Bias–variance decomposition</h4>
+          <p class="obj">Objective: explain generalisation error formally.</p>
+          <div class="topic"><span class="tt">Bias–variance decomposition</span><p>Expected test error splits into (squared) bias, variance, and irreducible noise. Simple models: high bias, low variance; complex models: low bias, high variance. The best complexity minimises their sum.</p>
+            <div class="formula">$\mathbb{E}\big[(y-\hat{f}(x))^2\big] = \underbrace{\big(\mathbb{E}[\hat{f}(x)]-f(x)\big)^2}_{\text{bias}^2} + \underbrace{\operatorname{Var}[\hat{f}(x)]}_{\text{variance}} + \underbrace{\sigma^2}_{\text{noise}}$<span class="cap">The fundamental decomposition of expected squared prediction error.</span></div>
+          </div>
+          <div class="keyidea"><b>Key idea:</b> you can't drive both bias and variance to zero — cross-validation finds the sweet spot in between.</div>
+          <a class="demolink" href="./index.html#bv" target="_blank" rel="noopener">Bias–variance demo</a>
+          <a class="demolink" href="./index.html#cv" target="_blank" rel="noopener">Cross-validation demo</a>
+          <ul class="readings"><li><b>ESL</b> §7.2–7.3 — bias, variance &amp; model complexity</li></ul>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ============ MODULE 4 ============ -->
+    <div class="module" id="mod4">
+      <header>
+        <div class="eyebrow">Module 4</div>
+        <h3>Ensemble Methods</h3>
+        <div class="mrange">Sessions 14–16 · combining many learners</div>
+        <p>Three ways to combine weak/high-variance learners into a strong one: bagging (parallel, variance-reducing), boosting (sequential, bias-reducing), and stacking (meta-learning over heterogeneous models).</p>
+        <div class="outcomes"><div class="t">Module learning outcomes</div><ul>
+          <li>Explain how bootstrap aggregation reduces variance, and how random forests de-correlate trees.</li>
+          <li>Derive the AdaBoost reweighting and its bias-reduction effect.</li>
+          <li>Build a stacked ensemble with a meta-learner.</li>
+        </ul></div>
+      </header>
+      <div class="timeline">
+
+        <div class="sess">
+          <div class="num">14</div>
+          <h4>Ensemble methods I: Bagging</h4>
+          <p class="obj">Objective: reduce variance by averaging over bootstrap resamples.</p>
+          <div class="topic"><span class="tt">Bagging</span><p>Train many high-variance learners on bootstrap samples of the data and average their predictions. Variance falls while bias stays roughly fixed.</p>
+            <div class="formula">$\hat{f}_{\text{bag}}(x)=\frac{1}{B}\sum_{b=1}^{B}\hat{f}^{*b}(x)$<span class="cap">Bagging: average over $B$ models fit on bootstrap resamples.</span></div>
+          </div>
+          <div class="topic"><span class="tt">Random forests</span><p>Bagging + a random feature subset at each split de-correlates the trees, cutting ensemble variance further than bagging alone.</p></div>
+          <div class="keyidea"><b>Key idea:</b> averaging independent-ish predictors shrinks variance ∝ 1/B; the trick is keeping them as uncorrelated as possible.</div>
+          <a class="demolink" href="./index.html#bagging" target="_blank" rel="noopener">Bagging demo</a>
+          <a class="demolink" href="./index.html#rf" target="_blank" rel="noopener">Random forest demo</a>
+          <ul class="readings"><li><b>ESL</b> §8.7 (bagging), ch. 15 (random forests)</li></ul>
+        </div>
+
+        <div class="sess">
+          <div class="num">15</div>
+          <h4>Ensemble methods II: Boosting</h4>
+          <p class="obj">Objective: reduce bias by sequentially focusing on hard examples.</p>
+          <div class="topic"><span class="tt">Boosting / AdaBoost</span><p>Fit weak learners (e.g. stumps) in sequence, re-weighting misclassified points so later learners concentrate on them; combine with weights tied to each learner's accuracy.</p>
+            <div class="formula">$\alpha_t=\tfrac12\ln\!\frac{1-\varepsilon_t}{\varepsilon_t},\qquad w_i\leftarrow w_i\,e^{-\alpha_t y_i h_t(x_i)}$<span class="cap">AdaBoost: learner weight $\alpha_t$ from its error $\varepsilon_t$; sample weights up-weight mistakes.</span></div>
+          </div>
+          <div class="keyidea"><b>Key idea:</b> where bagging averages independent learners, boosting builds a dependent committee that fixes its own errors — driving down bias.</div>
+          <a class="demolink" href="./index.html#boost" target="_blank" rel="noopener">AdaBoost demo</a>
+          <ul class="readings"><li><b>ESL</b> ch. 10 — boosting &amp; additive trees</li></ul>
+        </div>
+
+        <div class="sess">
+          <div class="num">16</div>
+          <h4>Ensemble methods III: Stacking</h4>
+          <p class="obj">Objective: combine heterogeneous models with a meta-learner.</p>
+          <div class="topic"><span class="tt">Stacking</span><p>Train several different base models, then train a meta-model on their (cross-validated) predictions to learn the best combination. Captures complementary strengths that a single family misses.</p>
+            <div class="formula">$\hat{y}=g\big(\hat{f}_1(x),\hat{f}_2(x),\dots,\hat{f}_M(x)\big)$<span class="cap">Stacked generalisation: a meta-learner $g$ over base-model outputs.</span></div>
+          </div>
+          <div class="keyidea"><b>Key idea:</b> let a second-level model learn <i>how</i> to trust each base learner, rather than averaging them blindly.</div>
+          <a class="demolink" href="./index.html#rf" target="_blank" rel="noopener">Random forest demo</a>
+          <a class="demolink" href="./index.html#boost" target="_blank" rel="noopener">Boosting demo</a>
+          <ul class="readings"><li><b>ESL</b> §8.8 — model averaging &amp; stacking</li></ul>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ============ MODULE 5 ============ -->
+    <div class="module" id="mod5">
+      <header>
+        <div class="eyebrow">Module 5</div>
+        <h3>Kernel Methods</h3>
+        <div class="mrange">Sessions 17–18 · non-linearity without explicit features</div>
+        <p>Generalise linear methods to non-linear ones by implicitly mapping data to high-dimensional spaces. Kernels compute inner products in that space without ever forming the feature map.</p>
+        <div class="outcomes"><div class="t">Module learning outcomes</div><ul>
+          <li>State the kernel trick and why it follows from the SVM dual.</li>
+          <li>Compare polynomial and RBF kernels and the role of their hyperparameters.</li>
+        </ul></div>
+      </header>
+      <div class="timeline">
+
+        <div class="sess">
+          <div class="num">17</div>
+          <h4>Kernel methods I</h4>
+          <p class="obj">Objective: introduce the kernel trick.</p>
+          <div class="topic"><span class="tt">The kernel trick</span><p>If an algorithm depends on data only through inner products, replace $x^\top x'$ with a kernel $K(x,x')=\langle\phi(x),\phi(x')\rangle$ — computing the high-dimensional inner product implicitly, no explicit $\phi$ needed.</p>
+            <div class="formula">$K(x,x')=\exp\!\big(-\gamma\lVert x-x'\rVert^2\big)\;(\text{RBF}),\qquad (x^\top x'+c)^d\;(\text{polynomial})$<span class="cap">Two workhorse kernels; RBF $\gamma$ sets locality, polynomial $d$ sets the degree.</span></div>
+          </div>
+          <div class="keyidea"><b>Key idea:</b> non-linearly separable data often becomes linearly separable in a higher-dimensional lift — and kernels reach that space for free.</div>
+          <a class="demolink" href="./index.html#kernel" target="_blank" rel="noopener">Kernel trick demo</a>
+          <ul class="readings"><li><b>ESL</b> §12.3 — SVMs &amp; kernels</li><li><b>ESL</b> §6.3 — kernel methods</li></ul>
+        </div>
+
+        <div class="sess">
+          <div class="num">18</div>
+          <h4>Kernel methods II</h4>
+          <p class="obj">Objective: apply kernels in the SVM and beyond.</p>
+          <div class="topic"><span class="tt">Kernel SVMs</span><p>The kernelised dual SVM produces curved decision boundaries. RBF $\gamma$ trades locality (high $\gamma$ = wiggly, overfit) against smoothness; with $C$ it forms the model's two-knob bias–variance control.</p></div>
+          <div class="topic"><span class="tt">Mercer's condition</span><p>Valid kernels correspond to positive-semidefinite Gram matrices, guaranteeing a well-posed convex problem. Kernels also extend to ridge regression, PCA, and clustering.</p></div>
+          <div class="keyidea"><b>Key idea:</b> the kernel is a similarity measure; choosing it is choosing the geometry in which your data is "simple."</div>
+          <a class="demolink" href="./index.html#svm" target="_blank" rel="noopener">SVM demo (RBF / poly kernels)</a>
+          <ul class="readings"><li><b>ESL</b> §12.3.3 — the SVM as a penalisation method</li></ul>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ============ MODULE 6 ============ -->
+    <div class="module" id="mod6">
+      <header>
+        <div class="eyebrow">Module 6</div>
+        <h3>Clustering</h3>
+        <div class="mrange">Sessions 19–21 · unsupervised structure discovery</div>
+        <p>Unsupervised learning: discover groups in unlabelled data. Covers centroid-based (k-means), hierarchical (agglomerative + dendrograms), and density/model-based approaches, plus how to choose the number of clusters.</p>
+        <div class="outcomes"><div class="t">Module learning outcomes</div><ul>
+          <li>Run k-means and explain its objective and initialisation sensitivity.</li>
+          <li>Build and cut a dendrogram under different linkages.</li>
+          <li>Discuss density-based clustering and cluster-count selection.</li>
+        </ul></div>
+      </header>
+      <div class="timeline">
+
+        <div class="sess">
+          <div class="num">19</div>
+          <h4>Clustering I — k-means</h4>
+          <p class="obj">Objective: partition data into k compact clusters.</p>
+          <div class="topic"><span class="tt">k-means</span><p>Alternate between assigning points to the nearest centroid and recomputing centroids as cluster means — greedy descent on within-cluster sum-of-squares. Sensitive to initialisation; k-means++ seeds smartly.</p>
+            <div class="formula">$\min_{\{C_k\}}\sum_{k=1}^{K}\sum_{x\in C_k}\lVert x-\mu_k\rVert^2,\qquad \mu_k=\frac{1}{|C_k|}\sum_{x\in C_k}x$<span class="cap">k-means objective (WCSS) and the centroid update.</span></div>
+          </div>
+          <div class="keyidea"><b>Key idea:</b> k-means is Lloyd's algorithm — fast and intuitive, but it only finds a local minimum, so initialisation matters.</div>
+          <a class="demolink" href="./index.html#kmeans" target="_blank" rel="noopener">k-means demo</a>
+          <ul class="readings"><li><b>ESL</b> §14.3.6 — k-means clustering</li></ul>
+        </div>
+
+        <div class="sess">
+          <div class="num">20</div>
+          <h4>Clustering II — hierarchical</h4>
+          <p class="obj">Objective: build a nested clustering without fixing k.</p>
+          <div class="topic"><span class="tt">Hierarchical (agglomerative) clustering</span><p>Start with each point as its own cluster and repeatedly merge the closest pair. The merge order forms a dendrogram; cut it at any height for a flat clustering.</p>
+            <div class="formula">$d_{\text{single}}(A,B)=\min_{a\in A,b\in B}\lVert a-b\rVert,\quad d_{\text{complete}}=\max,\quad d_{\text{Ward}}=\Delta\text{WCSS}$<span class="cap">Linkage criteria define the inter-cluster distance and shape the merges.</span></div>
+          </div>
+          <div class="keyidea"><b>Key idea:</b> the dendrogram encodes a whole family of clusterings at once — you choose granularity by where you cut.</div>
+          <a class="demolink" href="./index.html#hc" target="_blank" rel="noopener">Hierarchical clustering demo</a>
+          <ul class="readings"><li><b>ESL</b> §14.3.12 — hierarchical clustering</li></ul>
+        </div>
+
+        <div class="sess">
+          <div class="num">21</div>
+          <h4>Clustering III — density &amp; model-based, choosing k</h4>
+          <p class="obj">Objective: cluster non-spherical data and pick the number of clusters.</p>
+          <div class="topic"><span class="tt">Density-based &amp; mixture models</span><p>Methods such as DBSCAN find arbitrarily-shaped clusters and label outliers; Gaussian mixture models give a soft, probabilistic clustering via EM.</p></div>
+          <div class="topic"><span class="tt">Choosing k</span><p>Elbow on WCSS, silhouette score, and gap statistic help select the cluster count; validation guards against over-segmentation.</p></div>
+          <div class="keyidea"><b>Key idea:</b> there is no single "correct" clustering — the right method and k depend on cluster shape, density, and your downstream goal.</div>
+          <a class="demolink" href="./index.html#anom" target="_blank" rel="noopener">Anomaly / density demo</a>
+          <a class="demolink" href="./index.html#kmeans" target="_blank" rel="noopener">k-means demo</a>
+          <ul class="readings"><li><b>ESL</b> §14.3 — cluster analysis</li></ul>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ============ MODULE 7 ============ -->
+    <div class="module" id="mod7">
+      <header>
+        <div class="eyebrow">Module 7</div>
+        <h3>Dimensionality Reduction</h3>
+        <div class="mrange">Sessions 22–23 · compressing &amp; visualising data</div>
+        <p>Project high-dimensional data into a few informative dimensions — linearly via PCA, and through distance-preserving embeddings (MDS) and non-linear manifold methods for visualisation.</p>
+        <div class="outcomes"><div class="t">Module learning outcomes</div><ul>
+          <li>Derive PCA as variance maximisation / reconstruction-error minimisation.</li>
+          <li>Explain MDS and contrast it with non-linear embeddings (t-SNE / UMAP).</li>
+        </ul></div>
+      </header>
+      <div class="timeline">
+
+        <div class="sess">
+          <div class="num">22</div>
+          <h4>Dimensionality reduction I — PCA</h4>
+          <p class="obj">Objective: find the directions of greatest variance.</p>
+          <div class="topic"><span class="tt">Principal Component Analysis</span><p>Find orthogonal axes (eigenvectors of the covariance matrix) capturing maximal variance; project onto the top few for a low-dimensional, decorrelated representation. Equivalently minimises reconstruction error.</p>
+            <div class="formula">$\Sigma=\tfrac1n X^\top X,\qquad \Sigma v_k=\lambda_k v_k,\qquad \text{var. explained}=\frac{\lambda_k}{\sum_j\lambda_j}$<span class="cap">PCA: eigendecomposition of the covariance; eigenvalues give variance explained.</span></div>
+          </div>
+          <div class="keyidea"><b>Key idea:</b> PCA rotates to the axes where the data spreads most — the first few components keep the signal, the rest is mostly noise.</div>
+          <a class="demolink" href="./index.html#pca" target="_blank" rel="noopener">PCA demo</a>
+          <ul class="readings"><li><b>ESL</b> §14.5 — principal components</li></ul>
+        </div>
+
+        <div class="sess">
+          <div class="num">23</div>
+          <h4>Dimensionality reduction II — MDS &amp; non-linear embeddings</h4>
+          <p class="obj">Objective: preserve distances / structure in a 2-D map.</p>
+          <div class="topic"><span class="tt">Multidimensional scaling (MDS)</span><p>Embed objects in low dimensions so pairwise distances match a given dissimilarity matrix — useful when only similarities are known. Minimises a stress objective.</p>
+            <div class="formula">$\text{Stress}=\sum_{i<j}\big(\lVert z_i-z_j\rVert - d_{ij}\big)^2$<span class="cap">MDS stress: mismatch between embedded and target distances.</span></div>
+          </div>
+          <div class="topic"><span class="tt">Non-linear manifold methods</span><p>t-SNE and UMAP preserve local neighbourhood structure for visualisation, revealing clusters that linear PCA may miss.</p></div>
+          <div class="keyidea"><b>Key idea:</b> PCA preserves global variance; MDS preserves distances; t-SNE/UMAP preserve local neighbourhoods — match the method to what you need to keep.</div>
+          <a class="demolink" href="./index.html#mds" target="_blank" rel="noopener">MDS demo</a>
+          <a class="demolink" href="./index.html#pca" target="_blank" rel="noopener">PCA demo</a>
+          <ul class="readings"><li><b>ESL</b> §14.8 — multidimensional scaling</li></ul>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ============ MODULE 8 ============ -->
+    <div class="module" id="mod8">
+      <header>
+        <div class="eyebrow">Module 8</div>
+        <h3>Topics in Deep Learning</h3>
+        <div class="mrange">Sessions 24–27 · modern &amp; generative methods</div>
+        <p>Four sessions on contemporary deep learning — specialised architectures (CNNs, sequence/attention models), representation learning, and generative models (autoencoders, GANs, diffusion). Exact topics are at the instructor's discretion and may include other advanced material.</p>
+        <div class="outcomes"><div class="t">Module learning outcomes</div><ul>
+          <li>Recognise key modern architectures and what inductive bias each encodes.</li>
+          <li>Explain the idea behind generative models and representation learning.</li>
+        </ul></div>
+      </header>
+      <div class="timeline">
+
+        <div class="sess">
+          <div class="num">24</div>
+          <h4>Topics in deep learning I — convolutional networks</h4>
+          <p class="obj">Objective: exploit spatial structure with weight sharing.</p>
+          <div class="topic"><span class="tt">CNNs</span><p>Convolutional layers share weights across space (translation equivariance) and pool for invariance, drastically cutting parameters for image-like data.</p>
+            <div class="formula">$(f * g)(i,j)=\sum_{m}\sum_{n} f(m,n)\,g(i-m,\,j-n)$<span class="cap">Discrete 2-D convolution — the core operation of a conv layer.</span></div>
+          </div>
+          <div class="keyidea"><b>Key idea:</b> the right architectural prior (locality + weight sharing) beats brute-force fully-connected layers on structured data.</div>
+          <a class="demolink" href="./index.html#mlp" target="_blank" rel="noopener">MLP demo (contrast)</a>
+          <ul class="readings"><li><b>Deep Learning</b> ch. 9 — convolutional networks</li></ul>
+        </div>
+
+        <div class="sess">
+          <div class="num">25</div>
+          <h4>Topics in deep learning II — sequences &amp; attention</h4>
+          <p class="obj">Objective: model sequential data and long-range dependencies.</p>
+          <div class="topic"><span class="tt">RNNs &amp; attention</span><p>Recurrent nets process sequences with shared weights through time (and suffer vanishing gradients); attention and the Transformer let every position attend to every other directly.</p>
+            <div class="formula">$\text{Attention}(Q,K,V)=\operatorname{softmax}\!\Big(\tfrac{QK^\top}{\sqrt{d_k}}\Big)V$<span class="cap">Scaled dot-product attention — the heart of the Transformer.</span></div>
+          </div>
+          <div class="keyidea"><b>Key idea:</b> attention replaces fixed recurrence with learned, content-based routing of information.</div>
+          <ul class="readings"><li><b>Deep Learning</b> ch. 10 — sequence modeling</li></ul>
+        </div>
+
+        <div class="sess">
+          <div class="num">26</div>
+          <h4>Topics in deep learning III — generative models &amp; autoencoders</h4>
+          <p class="obj">Objective: learn to represent and generate data.</p>
+          <div class="topic"><span class="tt">Autoencoders &amp; VAEs</span><p>Learn a compressed latent code by reconstructing the input; variational autoencoders impose a probabilistic latent space enabling sampling.</p>
+            <div class="formula">$\mathcal{L}_{\text{VAE}}=\mathbb{E}_{q(z|x)}[\log p(x|z)] - \mathrm{KL}\big(q(z|x)\,\Vert\,p(z)\big)$<span class="cap">The VAE evidence lower bound: reconstruction minus a latent-regularising KL term.</span></div>
+          </div>
+          <div class="keyidea"><b>Key idea:</b> generative models learn the data distribution itself, not just a decision boundary — enabling sampling, denoising, and representation learning.</div>
+          <a class="demolink" href="./index.html#pca" target="_blank" rel="noopener">PCA demo (linear analogue)</a>
+          <ul class="readings"><li><b>Deep Learning</b> ch. 14 (autoencoders), ch. 20 (generative models)</li></ul>
+        </div>
+
+        <div class="sess">
+          <div class="num">27</div>
+          <h4>Topics in deep learning IV — GANs / diffusion &amp; outlook</h4>
+          <p class="obj">Objective: survey state-of-the-art generative modelling.</p>
+          <div class="topic"><span class="tt">GANs &amp; diffusion</span><p>GANs pit a generator against a discriminator in a minimax game; diffusion models learn to reverse a gradual noising process to synthesise samples.</p>
+            <div class="formula">$\min_G \max_D \;\mathbb{E}_{x}[\log D(x)] + \mathbb{E}_{z}[\log(1-D(G(z)))]$<span class="cap">The GAN minimax objective.</span></div>
+          </div>
+          <div class="keyidea"><b>Key idea:</b> modern generation is an adversarial or denoising game — the model learns to produce samples indistinguishable from real data.</div>
+          <ul class="readings"><li><b>Deep Learning</b> §20.10 — deep generative models</li></ul>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ============ MODULE 9 ============ -->
+    <div class="module" id="mod9">
+      <header>
+        <div class="eyebrow">Module 9</div>
+        <h3>Group Projects &amp; Final Exam</h3>
+        <div class="mrange">Sessions 28–30 · synthesis &amp; assessment</div>
+        <p>Students present their group projects, then sit the comprehensive final exam.</p>
+        <div class="outcomes"><div class="t">Module learning outcomes</div><ul>
+          <li>Apply the full course toolkit to a real dataset end-to-end.</li>
+          <li>Communicate methods and results clearly in a report and presentation.</li>
+        </ul></div>
+      </header>
+      <div class="timeline">
+        <div class="sess cap">
+          <div class="num">28</div>
+          <h4>Group presentations (I)</h4>
+          <p class="obj">Objective: present the group project (report + in-class talk). <b>Part of the 25% Group Project grade.</b></p>
+          <div class="topic"><span class="tt">Presentations</span><p>Teams present their problem, chosen methods, evaluation, and findings. GenAI tools may not be used in the group project.</p></div>
+          <div class="keyidea"><b>Key idea:</b> choosing and justifying the right algorithm — and assessing it honestly — is the course's central skill.</div>
+        </div>
+        <div class="sess cap">
+          <div class="num">29</div>
+          <h4>Group presentations (II)</h4>
+          <p class="obj">Objective: remaining group presentations and discussion.</p>
+          <div class="topic"><span class="tt">Presentations</span><p>Continued team presentations with peer and instructor discussion.</p></div>
+          <div class="keyidea"><b>Key idea:</b> critically comparing approaches across teams reinforces model-selection judgement.</div>
+        </div>
+        <div class="sess exam">
+          <div class="num">30</div>
+          <h4>Final Exam</h4>
+          <p class="obj">Objective: comprehensive assessment of the whole course. <b>Worth 40%; minimum 3.5 required to pass.</b></p>
+          <div class="topic"><span class="tt">Coverage</span><p>All material: foundations, neural networks, trees, SVMs, kernels, ensembles, clustering, dimensionality reduction, and deep-learning topics.</p></div>
+          <div class="keyidea"><b>Key idea:</b> integrate theory, mathematics, and practical judgement across every method covered.</div>
+          <ul class="readings"><li>Comprehensive review of all course readings</li></ul>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ===================== GLOSSARY ===================== -->
+  <section class="block" id="glossary">
+    <h2>Key Concepts — glossary</h2>
+    <p class="lede">A quick-reference glossary of the course's central terms.</p>
+    <dl class="glossary">
+      <div class="term"><dt>Supervised learning</dt><dd>Learning a map from inputs to known targets (labels), so as to predict targets for new inputs.</dd></div>
+      <div class="term"><dt>Unsupervised learning</dt><dd>Finding structure (clusters, low-dimensional representations) in unlabelled data.</dd></div>
+      <div class="term"><dt>k-Nearest Neighbours</dt><dd>Lazy classifier that votes among the $k$ closest training points under a distance metric.</dd></div>
+      <div class="term"><dt>Curse of dimensionality</dt><dd>As dimensions grow, data sparsifies and distances concentrate, breaking distance-based methods.</dd></div>
+      <div class="term"><dt>Perceptron</dt><dd>A single linear unit with a step nonlinearity, trained by correcting misclassifications.</dd></div>
+      <div class="term"><dt>Multi-layer perceptron</dt><dd>A feed-forward network of fully-connected layers with nonlinear activations.</dd></div>
+      <div class="term"><dt>Activation function</dt><dd>The per-neuron nonlinearity (sigmoid, tanh, ReLU, GELU…) controlling gradient flow.</dd></div>
+      <div class="term"><dt>Loss function</dt><dd>A scalar measuring prediction error (squared, cross-entropy, hinge) that training minimises.</dd></div>
+      <div class="term"><dt>Gradient descent</dt><dd>Iteratively step parameters opposite the loss gradient, scaled by the learning rate $\eta$.</dd></div>
+      <div class="term"><dt>Backpropagation</dt><dd>Reverse-mode automatic differentiation — the chain rule computing all weight gradients in one backward pass.</dd></div>
+      <div class="term"><dt>Vanishing/exploding gradients</dt><dd>Gradient signal that shrinks or blows up through many layers, stalling deep-net training.</dd></div>
+      <div class="term"><dt>Overfitting</dt><dd>Fitting noise in the training set, hurting generalisation to new data.</dd></div>
+      <div class="term"><dt>Regularization</dt><dd>Penalising model complexity (L2 ridge, L1 lasso, dropout) to trade bias for lower variance.</dd></div>
+      <div class="term"><dt>Bias–variance tradeoff</dt><dd>Expected error = bias² + variance + noise; complexity must balance the two.</dd></div>
+      <div class="term"><dt>Cross-validation</dt><dd>Rotating train/validation folds to estimate test error with less noise than a single holdout.</dd></div>
+      <div class="term"><dt>Decision tree</dt><dd>Recursive axis-aligned splits chosen to reduce impurity (Gini/entropy); interpretable but high-variance.</dd></div>
+      <div class="term"><dt>Bagging</dt><dd>Averaging learners fit on bootstrap resamples to reduce variance.</dd></div>
+      <div class="term"><dt>Random forest</dt><dd>Bagged trees with random feature subsets per split, de-correlating the ensemble.</dd></div>
+      <div class="term"><dt>Boosting</dt><dd>Sequentially fitting weak learners on reweighted data to reduce bias (e.g. AdaBoost).</dd></div>
+      <div class="term"><dt>Stacking</dt><dd>A meta-learner trained on the predictions of heterogeneous base models.</dd></div>
+      <div class="term"><dt>Support Vector Machine</dt><dd>Maximum-margin classifier; only support vectors determine the boundary; $C$ controls slack.</dd></div>
+      <div class="term"><dt>Margin</dt><dd>The gap $2/\lVert w\rVert$ between the SVM hyperplane and the nearest points.</dd></div>
+      <div class="term"><dt>Kernel trick</dt><dd>Replacing inner products with a kernel $K(x,x')$ to operate in a high-dimensional space implicitly.</dd></div>
+      <div class="term"><dt>RBF kernel</dt><dd>Gaussian similarity $e^{-\gamma\lVert x-x'\rVert^2}$; $\gamma$ sets locality.</dd></div>
+      <div class="term"><dt>k-Means</dt><dd>Centroid clustering minimising within-cluster sum-of-squares via Lloyd's algorithm.</dd></div>
+      <div class="term"><dt>Hierarchical clustering</dt><dd>Agglomerative merging into a dendrogram, cut at any height for flat clusters.</dd></div>
+      <div class="term"><dt>PCA</dt><dd>Orthogonal projection onto top-variance directions (covariance eigenvectors).</dd></div>
+      <div class="term"><dt>MDS</dt><dd>Embedding that preserves pairwise distances by minimising a stress objective.</dd></div>
+      <div class="term"><dt>Softmax / cross-entropy</dt><dd>Multiclass probability output and its matching log-loss for classification.</dd></div>
+      <div class="term"><dt>Generative model</dt><dd>A model of the data distribution itself (VAE, GAN, diffusion) enabling sampling.</dd></div>
+    </dl>
+  </section>
+
+  <!-- ===================== BIBLIOGRAPHY ===================== -->
+  <section class="block" id="bibliography">
+    <h2>Bibliography</h2>
+    <p class="lede">Recommended texts. All three are freely available online.</p>
+    <div class="bib">
+      <div class="ref">
+        <div class="ttl">Hastie, Tibshirani &amp; Friedman — <i>The Elements of Statistical Learning</i> (2nd ed., 2017)</div>
+        <div class="meta">Springer · ISBN 0387848576 · <a href="https://hastie.su.domains/ElemStatLearn/download.html" target="_blank" rel="noopener">free PDF</a></div>
+        <p>The course's statistical backbone. Definitive treatment of supervised/unsupervised learning: linear methods, trees, SVMs &amp; kernels, ensembles, clustering, and PCA/MDS. The primary reference for Modules 3–7.</p>
+      </div>
+      <div class="ref">
+        <div class="ttl">Michael A. Nielsen — <i>Neural Networks and Deep Learning</i> (2015)</div>
+        <div class="meta">Determination Press · <a href="http://neuralnetworksanddeeplearning.com" target="_blank" rel="noopener">neuralnetworksanddeeplearning.com</a></div>
+        <p>An accessible, intuition-first introduction to neural nets and backpropagation. Best companion to Module 1 (perceptrons, MLPs, the cross-entropy cost, and why deep nets are hard to train).</p>
+      </div>
+      <div class="ref">
+        <div class="ttl">Goodfellow, Bengio &amp; Courville — <i>Deep Learning</i> (2016)</div>
+        <div class="meta">MIT Press · ISBN 0262035618 · <a href="https://www.deeplearningbook.org" target="_blank" rel="noopener">deeplearningbook.org</a></div>
+        <p>The comprehensive deep-learning reference. Covers optimisation, regularisation, convolutional and sequence models, and generative models — the main support for Module 8 and the deep-learning portions of Module 1.</p>
+      </div>
+    </div>
+    <div class="note" style="margin-top:18px">Behaviour, attendance, and ethics policies follow the University's Code of Conduct, Attendance Policy, and Ethics Code; the Program Director may provide further indications. See the official <a href="./SYLLABUS.pdf" target="_blank" rel="noopener">SYLLABUS.pdf</a> for full policy text and links.</div>
+  </section>
+
+  <div class="footer">
+    Course-structure page for <b>AI: Statistical Learning &amp; Prediction</b> (AISLP-CSAI.3.M.B), BCSAI · IE University · AY 25–26. Content derived from the official syllabus (Prof. Luciano Dyballa). Built as a study companion to the <a href="./index.html">interactive demos</a>. Math rendered with KaTeX where available. · <a href="./SYLLABUS.pdf" target="_blank" rel="noopener">Official syllabus (PDF)</a>
+  </div>
+
+</div>
+</body>
+</html>
