@@ -95,6 +95,24 @@ section.block > h2{font-size:20px;color:var(--acc);border-bottom:1px solid var(-
 .toc{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 0}
 .toc a{background:#172238;border:1px solid #2a3a63;color:var(--ink);padding:4px 10px;border-radius:99px;font-size:12px}
 .toc a:hover{background:#22305a;text-decoration:none}
+/* worked example + pitfall/connects annotations */
+.worked{background:#0c1220;border:1px solid var(--line);border-left:3px solid #9d7cff;border-radius:6px;padding:8px 12px;margin:8px 0;font-size:12.5px;color:#cfe3ff}
+.worked .t{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:#9d7cff;font-weight:700;margin-bottom:3px}
+.pitfall{background:#211826;border:1px solid #5a2f47;border-radius:6px;padding:7px 12px;margin:8px 0;font-size:12px;color:#f1d6e4}
+.pitfall b{color:#ffb6c8}
+.connects{font-size:12px;color:var(--mute);margin:6px 0 0;padding-left:16px;position:relative}
+.connects:before{content:"⇄";position:absolute;left:0;color:var(--acc2)}
+.connects b{color:#c5cee0}
+.readings li i{color:#9aa7c2;font-style:italic}
+.prereqgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin:14px 0}
+.prereqgrid .pq{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.prereqgrid .pq b{display:block;color:var(--ink);font-size:13px;margin-bottom:3px}
+.prereqgrid .pq span{font-size:12px;color:var(--mute)}
+.rubric{width:100%;border-collapse:collapse;margin:10px 0;font-size:12.5px}
+.rubric th,.rubric td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+.rubric th{background:#13203b;color:var(--acc);font-weight:600}
+.rubric td{color:#c5cee0}
+.rubric td:first-child{color:var(--ink);font-weight:600;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -157,6 +175,17 @@ section.block > h2{font-size:20px;color:var(--acc);border-bottom:1px solid var(-
       <div class="assess"><div class="head"><h4>Instructor</h4></div><p>Luciano Dyballa, Assistant Professor (School of Science &amp; Technology). Ph.D. Computer Science, Yale — machine learning, vision, computational neuroscience. Contact: <a href="mailto:ldyballa@faculty.ie.edu">ldyballa@faculty.ie.edu</a> (office hours on request).</p></div>
       <div class="assess"><div class="head"><h4>Companion demos</h4></div><p>The <a href="./index.html">interactive demos page</a> mirrors this syllabus: k-NN, regression, bias–variance, gradient descent, MLP/backprop, trees, bagging, random forest, AdaBoost, kernels, SVM, PCA, MDS, k-means, hierarchical clustering and more — all running client-side.</p></div>
     </div>
+
+    <h3 style="color:var(--mute)">Prerequisites &amp; how this course connects</h3>
+    <p class="lede">Each prerequisite is load-bearing: the course is built on their machinery, and the table below makes the dependency explicit so you can refresh the right tool before the session that needs it.</p>
+    <div class="prereqgrid">
+      <div class="pq"><b>Calculus for CS</b><span>Gradients, the chain rule and partial derivatives — the engine behind gradient descent (S4) and backpropagation (S5). If $\nabla$ and $\frac{\partial}{\partial w}$ feel rusty, review before Module 1.</span></div>
+      <div class="pq"><b>Matrices &amp; Linear Transformations</b><span>Vectors, matrix products, projections, eigenvalues/eigenvectors and quadratic forms — needed for the MLP forward pass, the SVM $\lVert w\rVert$, and PCA's eigendecomposition (S22).</span></div>
+      <div class="pq"><b>Probability for CS</b><span>Distributions, expectation, variance and conditional probability — the language of cross-entropy, the bias–variance decomposition (S13), and generative models (S26–27).</span></div>
+      <div class="pq"><b>Machine Learning Foundations</b><span>The supervised-learning frame, train/test splits and basic evaluation — assumed from Session 1, then deepened with theory and mathematics.</span></div>
+      <div class="pq"><b>Computer Programming II</b><span>Python proficiency (NumPy-style array thinking) — every coding demo and problem set implements algorithms in Python.</span></div>
+    </div>
+    <div class="note"><b>Weekly study load.</b> The 6-ECTS / 150-hour budget works out to roughly <b>5 hours of independent work per session</b> beyond class time: about 1.5&nbsp;h on readings, 2.5&nbsp;h on the problem set / coding, and 1&nbsp;h reviewing the previous session and preparing the next. Front-load Module 1 (the neural-network mathematics compounds) and protect time before Sessions 8 and 30. Treat the interactive demos as active recall: predict what a slider will do, then check.</div>
   </section>
 
   <!-- ===================== LEARNING OBJECTIVES ===================== -->
@@ -202,11 +231,22 @@ section.block > h2{font-size:20px;color:var(--acc);border-bottom:1px solid var(-
     </div>
 
     <div class="cardgrid">
-      <div class="assess"><div class="head"><h4>Final Exam</h4><div class="w">40%</div></div><p>You must score at least <b>3.5</b> on the final exam to pass the course overall — even if your other assessments would otherwise be passing.</p></div>
-      <div class="assess"><div class="head"><h4>Midterm Exam</h4><div class="w">25%</div></div><p>Held in Session 8, covering the foundations and neural-network material from Sessions 1–7.</p></div>
-      <div class="assess"><div class="head"><h4>Group Project</h4><div class="w">25%</div></div><p>A written report plus an in-class presentation (Sessions 28–29). GenAI may not be used.</p></div>
-      <div class="assess"><div class="head"><h4>Class Participation</h4><div class="w">10%</div></div><p>Selected exercises turned in throughout the course (may be presented in class), plus active participation, questions/remarks, punctuality, and class conduct.</p></div>
+      <div class="assess"><div class="head"><h4>Final Exam</h4><div class="w">40%</div></div><p>Comprehensive, in Session 30. You must score at least <b>3.5</b> on it to pass the course overall — even if your other assessments would otherwise be passing. <b>Format:</b> closed-book, on-campus; mixes short conceptual questions, derivations, and "choose-and-justify" model-selection problems. <b>Tip:</b> practise re-deriving the key formulas on this page from scratch rather than memorising them.</p></div>
+      <div class="assess"><div class="head"><h4>Midterm Exam</h4><div class="w">25%</div></div><p>Held in Session 8, covering the foundations and neural-network material from Sessions 1–7. <b>Format:</b> closed-book; expect a hand-worked gradient-descent / backprop step and reasoning about over/under-fitting. <b>Tip:</b> the MLP and gradient-descent demos let you sanity-check the mechanics you will be asked to reproduce.</p></div>
+      <div class="assess"><div class="head"><h4>Group Project</h4><div class="w">25%</div></div><p>A written report <i>plus</i> an in-class presentation (Sessions 28–29). <b>Deliverables:</b> a report (problem, data, methods, evaluation, discussion) and slides. <b>GenAI may not be used.</b> <b>Tip:</b> pick a dataset early, justify every modelling choice, and report honest baselines and error bars.</p></div>
+      <div class="assess"><div class="head"><h4>Class Participation</h4><div class="w">10%</div></div><p>Selected exercises turned in throughout the course (may be presented in class), plus active participation, questions/remarks, punctuality, and class conduct. <b>Tip:</b> turn in every announced exercise even when imperfect — consistency and engagement are what is rewarded.</p></div>
     </div>
+
+    <h3 style="color:var(--mute)">What strong work looks like — rubric per component</h3>
+    <table class="rubric">
+      <thead><tr><th>Component</th><th>What earns top marks</th><th>Common point-losers</th></tr></thead>
+      <tbody>
+        <tr><td>Final / Midterm</td><td>Correct derivations with each step justified; precise definitions; model choices argued from bias–variance and the data, not by name-dropping.</td><td>Memorised formulas applied to the wrong setting; skipped algebra; "it works well" with no reasoning.</td></tr>
+        <tr><td>Group report</td><td>Clear problem framing, principled train/validation/test protocol, baselines, appropriate metrics with uncertainty, honest discussion of limitations.</td><td>Test-set leakage, single metric with no baseline, unjustified hyperparameters, results without error analysis.</td></tr>
+        <tr><td>Presentation</td><td>Tight narrative, one idea per slide, a readable figure of the result, clean handling of questions, all members contributing.</td><td>Wall-of-text slides, no visual of the result, running over time, one person presenting everything.</td></tr>
+        <tr><td>Participation</td><td>Exercises submitted on time, thoughtful questions and remarks, helping peers reason, punctuality.</td><td>Missing submissions, passive attendance, lateness.</td></tr>
+      </tbody>
+    </table>
 
     <h3 style="color:var(--mute)">Pass, attendance &amp; re-sit rules</h3>
     <ul class="objlist">
@@ -248,10 +288,13 @@ section.block > h2{font-size:20px;color:var(--acc);border-bottom:1px solid var(-
           <div class="topic"><span class="tt">Nearest neighbours</span><p>A lazy, non-parametric rule: predict using the $k$ closest training points under a distance metric. No training phase — all computation happens at query time. Small $k$ gives a jagged, high-variance boundary; large $k$ smooths but biases it.</p>
             <div class="formula">$\hat{y}(x)=\text{majority vote of }\{y_i : x_i \in N_k(x)\},\quad d(x,x_i)=\lVert x-x_i\rVert_2$<span class="cap">k-NN prediction: vote among the $k$ nearest neighbours under Euclidean (or other) distance.</span></div>
           </div>
-          <div class="topic"><span class="tt">Curse of dimensionality</span><p>In high dimensions, data becomes sparse and almost all points are roughly equidistant, so "nearest" loses meaning and volume concentrates in thin shells — distance-based methods degrade and require exponentially more data.</p></div>
+          <div class="topic"><span class="tt">Curse of dimensionality</span><p>In high dimensions, data becomes sparse and almost all points are roughly equidistant, so "nearest" loses meaning and volume concentrates in thin shells — distance-based methods degrade and require exponentially more data. Concretely, to keep a fixed fraction $r$ of the data within a neighbourhood in $p$ dimensions, the neighbourhood's edge must span $r^{1/p}$ of each axis: capturing 10% of the data needs edge length $0.10^{1/10}\approx 0.79$ — 79% of the whole range, so the "local" neighbourhood is almost global.</p></div>
+          <div class="worked"><span class="t">Worked mini-example</span>Training points $x_1=(0,0)\!\to\!\text{A}$, $x_2=(2,0)\!\to\!\text{B}$, $x_3=(0,2)\!\to\!\text{B}$. Query $q=(0.5,0.5)$, $k=1$: distances are $\sqrt{0.5}\approx0.71$, $\sqrt{2.5}\approx1.58$, $\sqrt{2.5}\approx1.58$, so the nearest is $x_1$ → predict <b>A</b>. With $k=3$ the vote is {A,B,B} → predict <b>B</b>: increasing $k$ flips and smooths the decision.</div>
+          <div class="pitfall"><b>Pitfall:</b> k-NN is scale-sensitive — a feature measured in thousands dominates the Euclidean distance over one measured in fractions. Always standardise features (zero mean, unit variance) before computing distances.</div>
           <div class="keyidea"><b>Key idea:</b> k-NN trades zero training cost for expensive, distance-sensitive prediction — and that distance metric collapses as dimensionality grows.</div>
+          <p class="connects"><b>Connects to:</b> $k$ is a bias–variance dial (S13) — small $k$ = low bias/high variance; large $k$ = the reverse — and the distance breakdown motivates the dimensionality reduction of Module 7.</p>
           <a class="demolink" href="./index.html#knn" target="_blank" rel="noopener">k-NN demo</a>
-          <ul class="readings"><li><b>ESL</b> ch. 2 (statistical learning, k-NN, curse of dimensionality)</li><li><b>ESL</b> §13.3 — k-nearest-neighbour classifiers</li></ul>
+          <ul class="readings"><li><b>ESL</b> ch. 2 (statistical learning, k-NN, curse of dimensionality) — <i>the foundational chapter; read §2.3–2.5 closely.</i></li><li><b>ESL</b> §13.3 — k-nearest-neighbour classifiers <i>(prototype methods &amp; metric choice).</i></li></ul>
         </div>
 
         <div class="sess">
@@ -264,23 +307,29 @@ section.block > h2{font-size:20px;color:var(--acc);border-bottom:1px solid var(-
           <div class="topic"><span class="tt">The perceptron</span><p>An online, mistake-driven algorithm: on each misclassified example, nudge the weights toward correctness. Guaranteed to converge if the data is linearly separable.</p>
             <div class="formula">$w \leftarrow w + \eta\,(y_i - \hat{y}_i)\,x_i$<span class="cap">Perceptron update — applied only on misclassified points.</span></div>
           </div>
+          <div class="worked"><span class="t">Worked mini-example</span>Start $w=(0,0),\,b=0$, learning rate $\eta=1$. Point $x_1=(2,1),\,y_1=+1$: score $=0$, $\operatorname{sign}(0)$ is wrong, so $w\leftarrow w+1\cdot 2\cdot(2,1)=(4,2)$, $b\leftarrow 2$. Next $x_2=(-1,-1),\,y_2=-1$: score $=4(-1)+2(-1)+2=-4<0$ → correct, no update. The boundary has tilted toward separating the two points after a single mistake.</div>
+          <div class="pitfall"><b>Pitfall:</b> if the data is <i>not</i> linearly separable the perceptron never converges — it cycles forever. This non-convergence (and the lack of a margin) is exactly what the SVM in Module 3 fixes.</div>
           <div class="keyidea"><b>Key idea:</b> the perceptron is the atomic building block of neural nets — a single linear unit with a step nonlinearity, trained by correcting its own mistakes.</div>
+          <p class="connects"><b>Connects to:</b> swap the step for a sigmoid and the mistake-driven update for a gradient and you have logistic regression (S4); stack many such units and you get the MLP (S3).</p>
           <a class="demolink" href="./index.html#logreg" target="_blank" rel="noopener">Logistic regression demo</a>
-          <ul class="readings"><li><b>ESL</b> §4.5 — separating hyperplanes &amp; the perceptron</li><li><b>Nielsen</b> ch. 1 — perceptrons &amp; sigmoid neurons</li></ul>
+          <ul class="readings"><li><b>ESL</b> §4.5 — separating hyperplanes &amp; the perceptron <i>(geometry &amp; the convergence theorem).</i></li><li><b>Nielsen</b> ch. 1 — perceptrons &amp; sigmoid neurons <i>(why we soften the step).</i></li></ul>
         </div>
 
         <div class="sess">
           <div class="num">3</div>
           <h4>Intro to neural nets · Multi-layer perceptron</h4>
           <p class="obj">Objective: stack neurons into layers to represent non-linear functions.</p>
-          <div class="topic"><span class="tt">Intro to neural nets</span><p>Neurons as weighted sums passed through a nonlinearity; layers as composed transformations. Why a single linear layer cannot solve XOR.</p></div>
+          <div class="topic"><span class="tt">Intro to neural nets</span><p>Neurons as weighted sums passed through a nonlinearity; layers as composed transformations. A single linear layer cannot solve XOR because the four points $(0,0),(1,1)\!\to\!0$ and $(0,1),(1,0)\!\to\!1$ are not linearly separable — no single line splits them. The universal-approximation theorem guarantees that one hidden layer with enough units can approximate any continuous function, though depth often reaches the same accuracy with far fewer units.</p></div>
           <div class="topic"><span class="tt">Multi-layer perceptron (MLP)</span><p>A feed-forward network of fully-connected layers. Hidden layers learn intermediate representations, giving the universal-approximation capacity to carve curved boundaries.</p>
             <div class="formula">$h^{(l)} = \sigma\!\left(W^{(l)} h^{(l-1)} + b^{(l)}\right)$<span class="cap">Forward pass: each layer is an affine map followed by an elementwise activation $\sigma$.</span></div>
           </div>
+          <div class="worked"><span class="t">Worked mini-example (XOR in two layers)</span>A hidden layer with $h_1=\text{ReLU}(x_1+x_2)$ and $h_2=\text{ReLU}(x_1+x_2-1)$, then output $h_1-2h_2$, computes XOR exactly: input $(1,1)$ gives $h_1=2,h_2=1\Rightarrow 2-2=0$; input $(1,0)$ gives $h_1=1,h_2=0\Rightarrow 1$. The hidden layer re-represents the inputs so the output layer's job becomes linearly separable.</div>
+          <div class="pitfall"><b>Pitfall:</b> if every activation were linear, stacking layers would collapse to a single linear map $W_2W_1x$ — no extra power. The nonlinearity $\sigma$ is what makes depth meaningful.</div>
           <div class="keyidea"><b>Key idea:</b> depth + nonlinearity = expressive power. Hidden units let the network bend straight boundaries into the shapes the data needs.</div>
+          <p class="connects"><b>Connects to:</b> the affine-then-activation pattern here is exactly what backprop (S5) differentiates layer by layer, and the activation choice drives the gradient pathologies of S6.</p>
           <a class="demolink" href="./index.html#mlp" target="_blank" rel="noopener">MLP &amp; backprop demo</a>
           <a class="demolink" href="./index.html#act" target="_blank" rel="noopener">Activation functions demo</a>
-          <ul class="readings"><li><b>Nielsen</b> ch. 1–2 — feed-forward nets</li><li><b>Deep Learning</b> ch. 6 — deep feed-forward networks</li></ul>
+          <ul class="readings"><li><b>Nielsen</b> ch. 1–2 — feed-forward nets <i>(incl. the visual universal-approximation argument in ch. 4).</i></li><li><b>Deep Learning</b> ch. 6 — deep feed-forward networks <i>(architecture &amp; output units).</i></li></ul>
         </div>
 
         <div class="sess">
@@ -294,11 +343,14 @@ section.block > h2{font-size:20px;color:var(--acc);border-bottom:1px solid var(-
           <div class="topic"><span class="tt">Gradient descent</span><p>Move parameters opposite the gradient of the loss. Learning rate controls step size — too large diverges, too small crawls.</p>
             <div class="formula">$\theta \leftarrow \theta - \eta\,\nabla_\theta \mathcal{L}(\theta)$<span class="cap">Gradient-descent update with learning rate $\eta$.</span></div>
           </div>
+          <div class="worked"><span class="t">Worked mini-example (one GD step)</span>Minimise $\mathcal{L}(\theta)=\theta^2$ with $\eta=0.1$ from $\theta_0=4$. Gradient $\nabla\mathcal{L}=2\theta=8$, so $\theta_1=4-0.1\cdot8=3.2$; next $\theta_2=3.2-0.1\cdot6.4=2.56$. Each step multiplies $\theta$ by $(1-2\eta)=0.8$, converging geometrically. With $\eta=0.6$ the factor is $-0.2$ and it oscillates; with $\eta>1$ the factor exceeds 1 in magnitude and it diverges.</div>
+          <div class="pitfall"><b>Pitfall:</b> pairing a sigmoid output with squared-error loss flattens the gradient when the neuron saturates (the $\sigma'$ term vanishes), so learning stalls on confident-but-wrong predictions. Cross-entropy cancels that $\sigma'$ and keeps the gradient strong — which is why it is the default for classification.</div>
           <div class="keyidea"><b>Key idea:</b> the loss defines the objective; the activation shapes the gradient landscape; the learning rate decides whether you reach the bottom of it.</div>
+          <p class="connects"><b>Connects to:</b> the learning-rate behaviour above scales to every network here; saturating activations foreshadow vanishing gradients (S6), and hinge loss reappears as the SVM objective (S10–11).</p>
           <a class="demolink" href="./index.html#loss" target="_blank" rel="noopener">Loss functions demo</a>
           <a class="demolink" href="./index.html#act" target="_blank" rel="noopener">Activations demo</a>
           <a class="demolink" href="./index.html#gd" target="_blank" rel="noopener">Gradient descent demo</a>
-          <ul class="readings"><li><b>Deep Learning</b> §4.3, ch. 6.2 — gradient-based optimisation &amp; output units</li><li><b>Nielsen</b> ch. 3 — the cross-entropy cost</li></ul>
+          <ul class="readings"><li><b>Deep Learning</b> §4.3, ch. 6.2 — gradient-based optimisation &amp; output units <i>(why output unit and loss are chosen together).</i></li><li><b>Nielsen</b> ch. 3 — the cross-entropy cost <i>(the learning-slowdown argument).</i></li></ul>
         </div>
 
         <div class="sess">
@@ -308,9 +360,12 @@ section.block > h2{font-size:20px;color:var(--acc);border-bottom:1px solid var(-
           <div class="topic"><span class="tt">Backpropagation</span><p>The chain rule applied layer-by-layer: a forward pass caches activations, then errors are propagated backward to give every weight's gradient in one sweep. This is what makes training deep nets tractable.</p>
             <div class="formula">$\delta^{(l)} = \big(W^{(l+1)\top}\delta^{(l+1)}\big)\odot\sigma'\!\big(z^{(l)}\big),\qquad \frac{\partial \mathcal{L}}{\partial W^{(l)}} = \delta^{(l)} \, h^{(l-1)\top}$<span class="cap">Backprop: recursively propagate the error signal $\delta$, then read off weight gradients.</span></div>
           </div>
+          <div class="worked"><span class="t">Worked mini-example (chain rule)</span>Tiny net $z=wx$, $a=\sigma(z)$, loss $\mathcal{L}=\tfrac12(a-y)^2$. Then $\frac{\partial\mathcal{L}}{\partial w}=(a-y)\cdot\sigma'(z)\cdot x$. With $x=1,w=0.5,y=0$: $z=0.5$, $a=\sigma(0.5)\approx0.62$, $\sigma'(z)=a(1-a)\approx0.24$, so the gradient is $0.62\cdot0.24\cdot1\approx0.15$ — one step of $\eta=0.1$ moves $w$ to $\approx0.485$. The three factors are exactly "error × local slope × input."</div>
+          <div class="pitfall"><b>Pitfall:</b> backprop needs the activations from the forward pass cached; recomputing or forgetting them is a classic bug. And the $\sigma'$ factor is the seed of vanishing gradients — multiply many sub-1 slopes through deep layers and the signal dies (S6).</div>
           <div class="keyidea"><b>Key idea:</b> backprop is just the chain rule organised so that each gradient is computed exactly once — reverse-mode automatic differentiation.</div>
+          <p class="connects"><b>Connects to:</b> this is the algorithm every framework's <code>.backward()</code> implements, and the per-layer $\sigma'$ product directly explains the training pathologies of S6.</p>
           <a class="demolink" href="./index.html#mlp" target="_blank" rel="noopener">MLP &amp; backprop demo</a>
-          <ul class="readings"><li><b>Nielsen</b> ch. 2 — how backpropagation works</li><li><b>Deep Learning</b> §6.5 — back-propagation</li></ul>
+          <ul class="readings"><li><b>Nielsen</b> ch. 2 — how backpropagation works <i>(the four backprop equations, derived from scratch).</i></li><li><b>Deep Learning</b> §6.5 — back-propagation <i>(general computational graphs).</i></li></ul>
         </div>
 
         <div class="sess">
@@ -319,11 +374,14 @@ section.block > h2{font-size:20px;color:var(--acc);border-bottom:1px solid var(-
           <p class="obj">Objective: understand why deep nets are hard to train and how to fix it.</p>
           <div class="topic"><span class="tt">Vanishing/exploding gradients</span><p>Repeated multiplication of derivatives through many layers shrinks or blows up the gradient signal, stalling or destabilising training — especially with saturating activations.</p></div>
           <div class="topic"><span class="tt">Improving MLPs</span><p>Practical remedies: better activations (ReLU family), careful weight initialisation (Xavier/He), normalisation, regularization (L2, dropout), and adaptive optimisers (momentum, Adam).</p></div>
-          <div class="topic"><span class="tt">Deep networks</span><p>Why depth helps representationally, and the engineering needed to make many layers trainable in practice.</p></div>
+          <div class="topic"><span class="tt">Deep networks</span><p>Why depth helps representationally (each layer composes features of the previous one, so functions that need exponentially many units in one wide layer can be expressed with linearly many in a deep stack), and the engineering needed to make many layers trainable in practice.</p></div>
+          <div class="worked"><span class="t">Worked mini-example (why gradients vanish)</span>With sigmoids, $\sigma'\le0.25$. A backprop signal crossing 10 layers is scaled by at most $0.25^{10}\approx10^{-6}$ — effectively zero, so early layers barely learn. He-initialised ReLU keeps the expected gradient scale near 1 per layer, which is why deep ReLU nets train where deep sigmoid nets stall.</div>
+          <div class="pitfall"><b>Pitfall:</b> too-large weights or learning rate cause the mirror failure — <i>exploding</i> gradients and <code>NaN</code> losses. Gradient clipping and careful initialisation are the standard fixes.</div>
           <div class="keyidea"><b>Key idea:</b> depth is powerful but fragile — activation choice, initialisation, normalisation, and optimiser turn an untrainable deep net into a working one.</div>
+          <p class="connects"><b>Connects to:</b> the $\sigma'$ product from backprop (S5) is the root cause here, and L2/dropout regularization links forward to the losses-and-regularizers theory of S12.</p>
           <a class="demolink" href="./index.html#act" target="_blank" rel="noopener">Activations demo</a>
           <a class="demolink" href="./index.html#sgd" target="_blank" rel="noopener">SGD &amp; softmax demo</a>
-          <ul class="readings"><li><b>Nielsen</b> ch. 5 — why deep nets are hard to train</li><li><b>Deep Learning</b> ch. 8 — optimisation for training deep models</li></ul>
+          <ul class="readings"><li><b>Nielsen</b> ch. 5 — why deep nets are hard to train <i>(the unstable-gradient problem, quantified).</i></li><li><b>Deep Learning</b> ch. 8 — optimisation for training deep models <i>(momentum, Adam, normalisation).</i></li></ul>
         </div>
 
       </div>
@@ -386,9 +444,12 @@ section.block > h2{font-size:20px;color:var(--acc);border-bottom:1px solid var(-
           <div class="topic"><span class="tt">Decision trees</span><p>Recursively split on the feature/threshold that most reduces impurity; each leaf predicts the majority class (or mean) of its region. Deep trees overfit; pruning / depth limits control complexity.</p>
             <div class="formula">$\text{Gini}(t)=1-\sum_{c} p_{c}^2,\qquad H(t)=-\sum_{c} p_c\log p_c$<span class="cap">Node impurity measures — splits are chosen to maximise the weighted impurity decrease.</span></div>
           </div>
+          <div class="worked"><span class="t">Worked mini-example (a split's impurity gain)</span>A node of 10 samples (5 +, 5 −) has $\text{Gini}=1-(0.5^2+0.5^2)=0.5$. A split sends {4+,1−} left and {1+,4−} right; each child has $\text{Gini}=1-(0.8^2+0.2^2)=0.32$. Weighted child impurity $=\tfrac{5}{10}(0.32)+\tfrac{5}{10}(0.32)=0.32$, so the impurity decrease is $0.5-0.32=0.18$ — the tree picks the feature/threshold maximising this gain.</div>
+          <div class="pitfall"><b>Pitfall:</b> a fully grown tree can memorise the training set (zero training error, terrible test error) and is unstable — a small data change can reshape it entirely. Control depth / minimum-leaf size, or prune. That very instability is what bagging exploits.</div>
           <div class="keyidea"><b>Key idea:</b> trees are greedy, high-variance, perfectly interpretable — and the ideal base learner for the ensembles to come.</div>
+          <p class="connects"><b>Connects to:</b> the high variance here is precisely what random forests (S14) average away, and trees are the weak learners boosting (S15) reweights.</p>
           <a class="demolink" href="./index.html#dtree" target="_blank" rel="noopener">Decision tree demo</a>
-          <ul class="readings"><li><b>ESL</b> §9.2 — tree-based methods (CART)</li></ul>
+          <ul class="readings"><li><b>ESL</b> §9.2 — tree-based methods (CART) <i>(splitting, pruning &amp; cost-complexity).</i></li></ul>
         </div>
 
         <div class="sess">
@@ -398,9 +459,12 @@ section.block > h2{font-size:20px;color:var(--acc);border-bottom:1px solid var(-
           <div class="topic"><span class="tt">Linear SVMs</span><p>Among all separating hyperplanes, choose the one that maximises the margin — the distance to the closest points (support vectors). Maximising the margin is minimising $\lVert w\rVert$.</p>
             <div class="formula">$\min_{w,b}\tfrac12\lVert w\rVert^2 \;\text{ s.t. }\; y_i(w^\top x_i + b)\ge 1\;\;\forall i$<span class="cap">Hard-margin SVM: the margin equals $2/\lVert w\rVert$.</span></div>
           </div>
+          <div class="worked"><span class="t">Worked mini-example (margin width)</span>One-dimensional points $x=-1\,(y{=}{-}1)$ and $x=+1\,(y{=}{+}1)$. The maximum-margin boundary is $x=0$ with $w=1,b=0$: the constraints $y_i(wx_i+b)\ge1$ are tight ($1\cdot1\ge1$), both points are support vectors, and the margin is $2/\lVert w\rVert=2$. Push the positive point to $x=+2$ and the optimal $w$ shrinks to $2/3$, widening the street.</div>
+          <div class="pitfall"><b>Pitfall:</b> the hard-margin SVM has <i>no</i> solution if the classes overlap even slightly — a single mislabelled point makes the constraints infeasible. This is the motivation for the soft margin in S11.</div>
           <div class="keyidea"><b>Key idea:</b> only the support vectors matter; the widest "street" between classes is the most robust boundary.</div>
+          <p class="connects"><b>Connects to:</b> maximising the margin is minimising $\lVert w\rVert^2$ — the same L2 penalty seen in ridge regression (S12); the dual sets up kernels (Module 5).</p>
           <a class="demolink" href="./index.html#svm" target="_blank" rel="noopener">SVM demo</a>
-          <ul class="readings"><li><b>ESL</b> §12.1–12.2 — support vector classifiers</li></ul>
+          <ul class="readings"><li><b>ESL</b> §12.1–12.2 — support vector classifiers <i>(the optimal separating hyperplane).</i></li></ul>
         </div>
 
         <div class="sess">
@@ -410,10 +474,15 @@ section.block > h2{font-size:20px;color:var(--acc);border-bottom:1px solid var(-
           <div class="topic"><span class="tt">Soft-margin SVM</span><p>Introduce slack variables $\xi_i$ to allow violations, controlled by penalty $C$ — large $C$ ≈ hard margin (low bias, high variance), small $C$ tolerates more errors for a wider margin. Equivalent to hinge loss + L2.</p>
             <div class="formula">$\min_{w,b}\tfrac12\lVert w\rVert^2 + C\sum_i \xi_i \;\text{ s.t. }\; y_i(w^\top x_i+b)\ge 1-\xi_i,\;\xi_i\ge0$<span class="cap">Soft-margin (C-SVM): trade margin width against classification violations.</span></div>
           </div>
-          <div class="topic"><span class="tt">Dual formulation</span><p>The Lagrangian dual expresses the solution purely through inner products of data points — setting up the kernel trick in Module 5.</p></div>
+          <div class="topic"><span class="tt">Dual formulation</span><p>The Lagrangian dual expresses the solution purely through inner products of data points — setting up the kernel trick in Module 5. Only support vectors get non-zero dual coefficients $\alpha_i$, so the final classifier $f(x)=\sum_i\alpha_i y_i\langle x_i,x\rangle+b$ depends on a sparse subset of the data.</p>
+            <div class="formula">$\ell_{\text{hinge}}(y,f)=\max(0,\,1-y\,f(x))$<span class="cap">Hinge loss: zero once a point is correct with margin $\ge1$, linear in the violation otherwise.</span></div>
+          </div>
+          <div class="worked"><span class="t">Worked mini-example (hinge loss)</span>True label $y=+1$. If $f(x)=1.5$ the point is correct beyond the margin → loss $\max(0,1-1.5)=0$. If $f(x)=0.3$ it is correct but inside the margin → loss $0.7$. If $f(x)=-0.4$ it is misclassified → loss $1.4$. Soft-margin SVM = minimise mean hinge loss $+\,\tfrac{1}{2C}\lVert w\rVert^2$.</div>
+          <div class="pitfall"><b>Pitfall:</b> $C$ is inverse-regularization — large $C$ punishes every violation and overfits noisy data (low bias/high variance); small $C$ over-smooths. Tune it by cross-validation, never by training error.</div>
           <div class="keyidea"><b>Key idea:</b> $C$ is the SVM's bias–variance dial, and the dual's reliance on inner products is exactly the door kernels walk through.</div>
+          <p class="connects"><b>Connects to:</b> "hinge + L2" is one instance of the loss+regularizer template formalised in S12; the inner-product form is the literal entry point for kernels (S17–18).</p>
           <a class="demolink" href="./index.html#svm" target="_blank" rel="noopener">SVM demo (try the C slider)</a>
-          <ul class="readings"><li><b>ESL</b> §12.2–12.3 — SVMs &amp; the optimisation problem</li></ul>
+          <ul class="readings"><li><b>ESL</b> §12.2–12.3 — SVMs &amp; the optimisation problem <i>(slack variables, the dual, the C parameter).</i></li></ul>
         </div>
 
         <div class="sess">
@@ -424,10 +493,13 @@ section.block > h2{font-size:20px;color:var(--acc);border-bottom:1px solid var(-
           <div class="topic"><span class="tt">Regularizers</span><p>Penalise coefficient magnitude to trade bias for reduced variance. Ridge (L2) shrinks smoothly; Lasso (L1) drives coefficients to exactly zero, performing feature selection.</p>
             <div class="formula">$\hat{\beta}=\arg\min_\beta \;\lVert y - X\beta\rVert_2^2 + \lambda\,\lVert\beta\rVert_2^2 \;(\text{ridge}),\qquad +\,\lambda\lVert\beta\rVert_1\;(\text{lasso})$<span class="cap">Penalised regression: $\lambda$ controls the strength of shrinkage.</span></div>
           </div>
+          <div class="worked"><span class="t">Worked mini-example (ridge shrinkage)</span>For orthonormal features the ridge solution is the OLS estimate scaled down: $\hat\beta_j^{\text{ridge}}=\hat\beta_j^{\text{OLS}}/(1+\lambda)$. So an OLS coefficient of $4$ with $\lambda=1$ becomes $2$; with $\lambda=3$ it becomes $1$. Lasso instead <i>soft-thresholds</i>: $\hat\beta_j=\operatorname{sign}(\hat\beta_j^{\text{OLS}})\max(0,|\hat\beta_j^{\text{OLS}}|-\lambda)$, so a coefficient of $0.5$ with $\lambda=0.5$ is set to exactly $0$ — that is feature selection.</div>
+          <div class="pitfall"><b>Pitfall:</b> regularizers assume comparable feature scales — always standardise first, or the penalty falls unevenly. Note too that the intercept is conventionally left un-penalised.</div>
           <div class="keyidea"><b>Key idea:</b> "model = loss + regularizer." L2 shrinks; L1 selects. Tuning $\lambda$ is tuning complexity.</div>
+          <p class="connects"><b>Connects to:</b> the same L2 penalty is the SVM's $\lVert w\rVert^2$ (S10) and weight decay in nets (S6); choosing $\lambda$ is choosing a point on the bias–variance curve (S13) via cross-validation.</p>
           <a class="demolink" href="./index.html#reg" target="_blank" rel="noopener">Regularization demo</a>
           <a class="demolink" href="./index.html#loss" target="_blank" rel="noopener">Loss functions demo</a>
-          <ul class="readings"><li><b>ESL</b> §3.4 — shrinkage methods (ridge, lasso)</li></ul>
+          <ul class="readings"><li><b>ESL</b> §3.4 — shrinkage methods (ridge, lasso) <i>(closed forms &amp; the geometry of the L1/L2 balls).</i></li></ul>
         </div>
 
         <div class="sess">
@@ -437,10 +509,13 @@ section.block > h2{font-size:20px;color:var(--acc);border-bottom:1px solid var(-
           <div class="topic"><span class="tt">Bias–variance decomposition</span><p>Expected test error splits into (squared) bias, variance, and irreducible noise. Simple models: high bias, low variance; complex models: low bias, high variance. The best complexity minimises their sum.</p>
             <div class="formula">$\mathbb{E}\big[(y-\hat{f}(x))^2\big] = \underbrace{\big(\mathbb{E}[\hat{f}(x)]-f(x)\big)^2}_{\text{bias}^2} + \underbrace{\operatorname{Var}[\hat{f}(x)]}_{\text{variance}} + \underbrace{\sigma^2}_{\text{noise}}$<span class="cap">The fundamental decomposition of expected squared prediction error.</span></div>
           </div>
+          <div class="worked"><span class="t">Worked mini-example (k-NN bias–variance)</span>For k-NN regression with noise variance $\sigma^2$, the variance of the prediction is $\sigma^2/k$ and the bias grows with $k$ (averaging over ever-more-distant, ever-less-relevant neighbours). At $k=1$: variance $\sigma^2$, near-zero bias. At $k=n$: variance $\sigma^2/n$ but the prediction is the global mean — huge bias. The test-error minimum sits at an intermediate $k$.</div>
+          <div class="pitfall"><b>Pitfall:</b> you can only estimate this decomposition on held-out data — training error is a downward-biased estimate of test error and always favours the most complex model. Use cross-validation or a separate test set.</div>
           <div class="keyidea"><b>Key idea:</b> you can't drive both bias and variance to zero — cross-validation finds the sweet spot in between.</div>
+          <p class="connects"><b>Connects to:</b> this single equation explains every "dial" in the course — $k$ (S1), tree depth (S9), $C$ and $\gamma$ (S10–18), $\lambda$ (S12) — and motivates why bagging (S14) attacks variance while boosting (S15) attacks bias.</p>
           <a class="demolink" href="./index.html#bv" target="_blank" rel="noopener">Bias–variance demo</a>
           <a class="demolink" href="./index.html#cv" target="_blank" rel="noopener">Cross-validation demo</a>
-          <ul class="readings"><li><b>ESL</b> §7.2–7.3 — bias, variance &amp; model complexity</li></ul>
+          <ul class="readings"><li><b>ESL</b> §7.2–7.3 — bias, variance &amp; model complexity <i>(the decomposition, derived and applied).</i></li><li><b>ESL</b> §7.10 — cross-validation <i>(how to estimate test error honestly).</i></li></ul>
         </div>
 
       </div>
@@ -469,10 +544,13 @@ section.block > h2{font-size:20px;color:var(--acc);border-bottom:1px solid var(-
             <div class="formula">$\hat{f}_{\text{bag}}(x)=\frac{1}{B}\sum_{b=1}^{B}\hat{f}^{*b}(x)$<span class="cap">Bagging: average over $B$ models fit on bootstrap resamples.</span></div>
           </div>
           <div class="topic"><span class="tt">Random forests</span><p>Bagging + a random feature subset at each split de-correlates the trees, cutting ensemble variance further than bagging alone.</p></div>
+          <div class="worked"><span class="t">Worked mini-example (variance of an average)</span>Averaging $B$ predictors each with variance $\sigma^2$ and pairwise correlation $\rho$ gives variance $\rho\sigma^2+\frac{1-\rho}{B}\sigma^2$. As $B\!\to\!\infty$ the second term vanishes but the floor $\rho\sigma^2$ remains — so reducing correlation $\rho$ (random forests' feature subsampling) matters as much as adding trees. Also note a bootstrap sample omits $\approx(1-1/n)^n\to 1/e\approx37\%$ of points, the out-of-bag set used for free validation.</div>
+          <div class="pitfall"><b>Pitfall:</b> bagging barely helps a low-variance, high-bias learner (e.g. a stump or linear model) — there is little variance to average away. It pays off for unstable learners like deep trees.</div>
           <div class="keyidea"><b>Key idea:</b> averaging independent-ish predictors shrinks variance ∝ 1/B; the trick is keeping them as uncorrelated as possible.</div>
+          <p class="connects"><b>Connects to:</b> this is the bias–variance theory of S13 in action — bagging targets the variance term and leaves bias unchanged; contrast with boosting (S15), which targets bias.</p>
           <a class="demolink" href="./index.html#bagging" target="_blank" rel="noopener">Bagging demo</a>
           <a class="demolink" href="./index.html#rf" target="_blank" rel="noopener">Random forest demo</a>
-          <ul class="readings"><li><b>ESL</b> §8.7 (bagging), ch. 15 (random forests)</li></ul>
+          <ul class="readings"><li><b>ESL</b> §8.7 (bagging), ch. 15 (random forests) <i>(de-correlation, OOB error, variable importance).</i></li></ul>
         </div>
 
         <div class="sess">
@@ -482,9 +560,12 @@ section.block > h2{font-size:20px;color:var(--acc);border-bottom:1px solid var(-
           <div class="topic"><span class="tt">Boosting / AdaBoost</span><p>Fit weak learners (e.g. stumps) in sequence, re-weighting misclassified points so later learners concentrate on them; combine with weights tied to each learner's accuracy.</p>
             <div class="formula">$\alpha_t=\tfrac12\ln\!\frac{1-\varepsilon_t}{\varepsilon_t},\qquad w_i\leftarrow w_i\,e^{-\alpha_t y_i h_t(x_i)}$<span class="cap">AdaBoost: learner weight $\alpha_t$ from its error $\varepsilon_t$; sample weights up-weight mistakes.</span></div>
           </div>
+          <div class="worked"><span class="t">Worked mini-example (an AdaBoost weight)</span>A weak learner with weighted error $\varepsilon_t=0.3$ earns $\alpha_t=\tfrac12\ln\frac{0.7}{0.3}\approx0.42$. Misclassified points are multiplied by $e^{+0.42}\approx1.52$ and correct ones by $e^{-0.42}\approx0.66$ (then renormalised), so the next learner concentrates on what this one missed. A learner at chance ($\varepsilon=0.5$) gets $\alpha=0$ — no vote; one below chance gets a negative $\alpha$ (its predictions are flipped).</div>
+          <div class="pitfall"><b>Pitfall:</b> because boosting chases hard points, it can fit label noise and outliers if run too long — early stopping / shrinkage (a learning rate on $\alpha_t$) is the usual guard. Modern gradient boosting (XGBoost) generalises this to arbitrary differentiable losses.</div>
           <div class="keyidea"><b>Key idea:</b> where bagging averages independent learners, boosting builds a dependent committee that fixes its own errors — driving down bias.</div>
+          <p class="connects"><b>Connects to:</b> AdaBoost is forward stagewise additive modelling under exponential loss (S12 loss view); it complements bagging's variance reduction (S14) on the bias side of S13.</p>
           <a class="demolink" href="./index.html#boost" target="_blank" rel="noopener">AdaBoost demo</a>
-          <ul class="readings"><li><b>ESL</b> ch. 10 — boosting &amp; additive trees</li></ul>
+          <ul class="readings"><li><b>ESL</b> ch. 10 — boosting &amp; additive trees <i>(AdaBoost as additive modelling, gradient boosting).</i></li></ul>
         </div>
 
         <div class="sess">
@@ -494,10 +575,12 @@ section.block > h2{font-size:20px;color:var(--acc);border-bottom:1px solid var(-
           <div class="topic"><span class="tt">Stacking</span><p>Train several different base models, then train a meta-model on their (cross-validated) predictions to learn the best combination. Captures complementary strengths that a single family misses.</p>
             <div class="formula">$\hat{y}=g\big(\hat{f}_1(x),\hat{f}_2(x),\dots,\hat{f}_M(x)\big)$<span class="cap">Stacked generalisation: a meta-learner $g$ over base-model outputs.</span></div>
           </div>
+          <div class="pitfall"><b>Pitfall:</b> the meta-learner must be trained on <i>out-of-fold</i> base predictions. If you feed it base models' in-sample predictions, it sees leaked information, over-trusts overfit bases, and collapses on new data.</div>
           <div class="keyidea"><b>Key idea:</b> let a second-level model learn <i>how</i> to trust each base learner, rather than averaging them blindly.</div>
+          <p class="connects"><b>Connects to:</b> stacking pays off most when base models are diverse (a tree, an SVM, a net make different errors) — the same de-correlation principle that powers random forests (S14), now across model families.</p>
           <a class="demolink" href="./index.html#rf" target="_blank" rel="noopener">Random forest demo</a>
           <a class="demolink" href="./index.html#boost" target="_blank" rel="noopener">Boosting demo</a>
-          <ul class="readings"><li><b>ESL</b> §8.8 — model averaging &amp; stacking</li></ul>
+          <ul class="readings"><li><b>ESL</b> §8.8 — model averaging &amp; stacking <i>(stacked generalisation &amp; Bayesian model averaging).</i></li></ul>
         </div>
 
       </div>
@@ -524,9 +607,12 @@ section.block > h2{font-size:20px;color:var(--acc);border-bottom:1px solid var(-
           <div class="topic"><span class="tt">The kernel trick</span><p>If an algorithm depends on data only through inner products, replace $x^\top x'$ with a kernel $K(x,x')=\langle\phi(x),\phi(x')\rangle$ — computing the high-dimensional inner product implicitly, no explicit $\phi$ needed.</p>
             <div class="formula">$K(x,x')=\exp\!\big(-\gamma\lVert x-x'\rVert^2\big)\;(\text{RBF}),\qquad (x^\top x'+c)^d\;(\text{polynomial})$<span class="cap">Two workhorse kernels; RBF $\gamma$ sets locality, polynomial $d$ sets the degree.</span></div>
           </div>
+          <div class="worked"><span class="t">Worked mini-example (an explicit feature map)</span>The polynomial kernel $K(x,z)=(x^\top z)^2$ in 2-D equals $\langle\phi(x),\phi(z)\rangle$ with $\phi(x)=(x_1^2,\sqrt2\,x_1x_2,x_2^2)$: expanding $(x_1z_1+x_2z_2)^2=x_1^2z_1^2+2x_1x_2z_1z_2+x_2^2z_2^2$ matches the dot product term by term. The kernel computes this 3-D inner product with one 2-D multiply-and-square — never building $\phi$. The RBF kernel corresponds to an <i>infinite</i>-dimensional $\phi$, which you could never form explicitly.</div>
+          <div class="pitfall"><b>Pitfall:</b> kernel methods scale with the number of samples, not features — the $n\times n$ Gram matrix costs $O(n^2)$ memory and the solve is up to $O(n^3)$, so plain kernel SVMs struggle past tens of thousands of points.</div>
           <div class="keyidea"><b>Key idea:</b> non-linearly separable data often becomes linearly separable in a higher-dimensional lift — and kernels reach that space for free.</div>
+          <p class="connects"><b>Connects to:</b> this only works because the SVM dual (S11) touches data solely through inner products; the same trick kernelises ridge regression (S12), PCA (S22), and clustering.</p>
           <a class="demolink" href="./index.html#kernel" target="_blank" rel="noopener">Kernel trick demo</a>
-          <ul class="readings"><li><b>ESL</b> §12.3 — SVMs &amp; kernels</li><li><b>ESL</b> §6.3 — kernel methods</li></ul>
+          <ul class="readings"><li><b>ESL</b> §12.3 — SVMs &amp; kernels <i>(the kernelised SVM).</i></li><li><b>ESL</b> §6.3 — kernel methods <i>(kernels as local weighting).</i></li></ul>
         </div>
 
         <div class="sess">
@@ -535,9 +621,12 @@ section.block > h2{font-size:20px;color:var(--acc);border-bottom:1px solid var(-
           <p class="obj">Objective: apply kernels in the SVM and beyond.</p>
           <div class="topic"><span class="tt">Kernel SVMs</span><p>The kernelised dual SVM produces curved decision boundaries. RBF $\gamma$ trades locality (high $\gamma$ = wiggly, overfit) against smoothness; with $C$ it forms the model's two-knob bias–variance control.</p></div>
           <div class="topic"><span class="tt">Mercer's condition</span><p>Valid kernels correspond to positive-semidefinite Gram matrices, guaranteeing a well-posed convex problem. Kernels also extend to ridge regression, PCA, and clustering.</p></div>
+          <div class="worked"><span class="t">Worked mini-example (the $\gamma$ knob)</span>For RBF, $K(x,x')=e^{-\gamma\lVert x-x'\rVert^2}$. At $\gamma=0.01$ two points 5 units apart still have similarity $e^{-0.25}\approx0.78$ — the kernel is broad and the boundary smooth. At $\gamma=5$ that similarity drops to $e^{-125}\approx0$ — each point influences only its immediate neighbourhood, giving a wiggly, high-variance boundary that can memorise the training set.</div>
+          <div class="pitfall"><b>Pitfall:</b> $C$ and $\gamma$ interact, so tune them jointly on a 2-D grid by cross-validation; optimising one then the other can miss the good region. A non-PSD "kernel" breaks the convexity guarantee entirely.</div>
           <div class="keyidea"><b>Key idea:</b> the kernel is a similarity measure; choosing it is choosing the geometry in which your data is "simple."</div>
+          <p class="connects"><b>Connects to:</b> $(\gamma,C)$ is the two-knob bias–variance control of S13; Mercer's PSD condition is the same property a covariance matrix has, linking kernels to PCA (S22).</p>
           <a class="demolink" href="./index.html#svm" target="_blank" rel="noopener">SVM demo (RBF / poly kernels)</a>
-          <ul class="readings"><li><b>ESL</b> §12.3.3 — the SVM as a penalisation method</li></ul>
+          <ul class="readings"><li><b>ESL</b> §12.3.3 — the SVM as a penalisation method <i>(hinge loss + RKHS norm).</i></li></ul>
         </div>
 
       </div>
@@ -565,9 +654,12 @@ section.block > h2{font-size:20px;color:var(--acc);border-bottom:1px solid var(-
           <div class="topic"><span class="tt">k-means</span><p>Alternate between assigning points to the nearest centroid and recomputing centroids as cluster means — greedy descent on within-cluster sum-of-squares. Sensitive to initialisation; k-means++ seeds smartly.</p>
             <div class="formula">$\min_{\{C_k\}}\sum_{k=1}^{K}\sum_{x\in C_k}\lVert x-\mu_k\rVert^2,\qquad \mu_k=\frac{1}{|C_k|}\sum_{x\in C_k}x$<span class="cap">k-means objective (WCSS) and the centroid update.</span></div>
           </div>
+          <div class="worked"><span class="t">Worked mini-example (one Lloyd iteration)</span>Points $1,2,9,10$ on a line, $K=2$, init centroids $\mu_A=1,\mu_B=2$. <b>Assign:</b> $1\!\to\!A$; $2,9,10\!\to\!B$. <b>Update:</b> $\mu_A=1,\ \mu_B=(2{+}9{+}10)/3=7$. <b>Re-assign:</b> $1,2\!\to\!A$, $9,10\!\to\!B$; update $\mu_A=1.5,\mu_B=9.5$ — converged, WCSS $=0.5+0.5=1$. A bad init ($\mu_A=1,\mu_B=2$) needed two passes; k-means++ would have spread the seeds and converged faster.</div>
+          <div class="pitfall"><b>Pitfall:</b> k-means assumes roughly spherical, equal-size clusters and minimises Euclidean WCSS — it fails on elongated or nested shapes and is pulled by outliers. Standardise features, run several inits, and keep the lowest-WCSS solution.</div>
           <div class="keyidea"><b>Key idea:</b> k-means is Lloyd's algorithm — fast and intuitive, but it only finds a local minimum, so initialisation matters.</div>
+          <p class="connects"><b>Connects to:</b> k-means is the hard-assignment limit of a Gaussian mixture fit by EM (S21); its spherical-cluster assumption is exactly what hierarchical (S20) and density methods relax.</p>
           <a class="demolink" href="./index.html#kmeans" target="_blank" rel="noopener">k-means demo</a>
-          <ul class="readings"><li><b>ESL</b> §14.3.6 — k-means clustering</li></ul>
+          <ul class="readings"><li><b>ESL</b> §14.3.6 — k-means clustering <i>(the WCSS objective &amp; Lloyd's algorithm).</i></li></ul>
         </div>
 
         <div class="sess">
@@ -577,9 +669,12 @@ section.block > h2{font-size:20px;color:var(--acc);border-bottom:1px solid var(-
           <div class="topic"><span class="tt">Hierarchical (agglomerative) clustering</span><p>Start with each point as its own cluster and repeatedly merge the closest pair. The merge order forms a dendrogram; cut it at any height for a flat clustering.</p>
             <div class="formula">$d_{\text{single}}(A,B)=\min_{a\in A,b\in B}\lVert a-b\rVert,\quad d_{\text{complete}}=\max,\quad d_{\text{Ward}}=\Delta\text{WCSS}$<span class="cap">Linkage criteria define the inter-cluster distance and shape the merges.</span></div>
           </div>
+          <div class="worked"><span class="t">Worked mini-example (a merge)</span>Points $0,1,5$ on a line under single linkage. Closest pair is $\{0,1\}$ (distance 1) → merge. Now distance from cluster $\{0,1\}$ to $5$ is $\min(5,4)=4$, so $5$ merges last at height 4. The dendrogram has a join at height 1 and another at height 4; cutting between them yields two clusters $\{0,1\}$ and $\{5\}$.</div>
+          <div class="pitfall"><b>Pitfall:</b> linkage choice changes everything — single linkage "chains" and can string distinct clusters together through bridging points, while complete linkage forces compact, equal-diameter clusters. Ward's tends to give the most balanced result. Agglomerative clustering is also $O(n^2)$–$O(n^3)$, so it does not scale to large $n$.</div>
           <div class="keyidea"><b>Key idea:</b> the dendrogram encodes a whole family of clusterings at once — you choose granularity by where you cut.</div>
+          <p class="connects"><b>Connects to:</b> unlike k-means (S19) you need not fix $K$ in advance — but you still need a rule (gap statistic, silhouette in S21) to choose the cut height.</p>
           <a class="demolink" href="./index.html#hc" target="_blank" rel="noopener">Hierarchical clustering demo</a>
-          <ul class="readings"><li><b>ESL</b> §14.3.12 — hierarchical clustering</li></ul>
+          <ul class="readings"><li><b>ESL</b> §14.3.12 — hierarchical clustering <i>(linkages &amp; dendrograms).</i></li></ul>
         </div>
 
         <div class="sess">
@@ -587,11 +682,16 @@ section.block > h2{font-size:20px;color:var(--acc);border-bottom:1px solid var(-
           <h4>Clustering III — density &amp; model-based, choosing k</h4>
           <p class="obj">Objective: cluster non-spherical data and pick the number of clusters.</p>
           <div class="topic"><span class="tt">Density-based &amp; mixture models</span><p>Methods such as DBSCAN find arbitrarily-shaped clusters and label outliers; Gaussian mixture models give a soft, probabilistic clustering via EM.</p></div>
-          <div class="topic"><span class="tt">Choosing k</span><p>Elbow on WCSS, silhouette score, and gap statistic help select the cluster count; validation guards against over-segmentation.</p></div>
+          <div class="topic"><span class="tt">Choosing k</span><p>Elbow on WCSS, silhouette score, and gap statistic help select the cluster count; validation guards against over-segmentation.</p>
+            <div class="formula">$s(i)=\dfrac{b(i)-a(i)}{\max\{a(i),b(i)\}}\in[-1,1]$<span class="cap">Silhouette: $a(i)$ = mean intra-cluster distance, $b(i)$ = mean distance to the nearest other cluster.</span></div>
+          </div>
+          <div class="worked"><span class="t">Worked mini-example (reading a silhouette)</span>A point sits at mean distance $a(i)=1$ from its own cluster and $b(i)=4$ from the next-nearest cluster: $s(i)=(4-1)/4=0.75$ — well clustered. If instead $a(i)=3,b(i)=3.2$, then $s(i)\approx0.06$ — the point is on a boundary and the chosen $K$ is suspect. Average $s$ over all points; pick the $K$ that maximises it.</div>
+          <div class="pitfall"><b>Pitfall:</b> DBSCAN's $\varepsilon$ and <code>minPts</code> are unintuitive and one global $\varepsilon$ fails when clusters have very different densities. GMM/EM, like k-means, only finds a local optimum and can collapse a component onto a single point (degenerate zero-variance).</div>
           <div class="keyidea"><b>Key idea:</b> there is no single "correct" clustering — the right method and k depend on cluster shape, density, and your downstream goal.</div>
+          <p class="connects"><b>Connects to:</b> GMM's soft, probabilistic assignments are the generative-model view (S26); density estimation underlies anomaly detection.</p>
           <a class="demolink" href="./index.html#anom" target="_blank" rel="noopener">Anomaly / density demo</a>
           <a class="demolink" href="./index.html#kmeans" target="_blank" rel="noopener">k-means demo</a>
-          <ul class="readings"><li><b>ESL</b> §14.3 — cluster analysis</li></ul>
+          <ul class="readings"><li><b>ESL</b> §14.3 — cluster analysis <i>(validity, gap statistic, mixture models).</i></li></ul>
         </div>
 
       </div>
@@ -618,9 +718,12 @@ section.block > h2{font-size:20px;color:var(--acc);border-bottom:1px solid var(-
           <div class="topic"><span class="tt">Principal Component Analysis</span><p>Find orthogonal axes (eigenvectors of the covariance matrix) capturing maximal variance; project onto the top few for a low-dimensional, decorrelated representation. Equivalently minimises reconstruction error.</p>
             <div class="formula">$\Sigma=\tfrac1n X^\top X,\qquad \Sigma v_k=\lambda_k v_k,\qquad \text{var. explained}=\frac{\lambda_k}{\sum_j\lambda_j}$<span class="cap">PCA: eigendecomposition of the covariance; eigenvalues give variance explained.</span></div>
           </div>
+          <div class="worked"><span class="t">Worked mini-example (variance explained)</span>Suppose the covariance eigenvalues are $\lambda=(6,3,1)$. PC1 captures $6/10=60\%$ of the variance, PC1+PC2 capture $90\%$. Keeping two of three dimensions loses only 10% of the spread — a justified compression. For data stretched along the $45°$ line, the top eigenvector is $\tfrac{1}{\sqrt2}(1,1)$: PCA finds the diagonal automatically.</div>
+          <div class="pitfall"><b>Pitfall:</b> PCA is variance-driven, so it is scale-sensitive — standardise (or use the correlation matrix) or a single large-unit feature hijacks PC1. PCA is also unsupervised: the top components need not be the directions most useful for predicting $y$.</div>
           <div class="keyidea"><b>Key idea:</b> PCA rotates to the axes where the data spreads most — the first few components keep the signal, the rest is mostly noise.</div>
+          <p class="connects"><b>Connects to:</b> PCA is the linear, global-variance counterpart of the manifold methods in S23, and a principled antidote to the curse of dimensionality (S1); the eigendecomposition reuses the linear-algebra prerequisite.</p>
           <a class="demolink" href="./index.html#pca" target="_blank" rel="noopener">PCA demo</a>
-          <ul class="readings"><li><b>ESL</b> §14.5 — principal components</li></ul>
+          <ul class="readings"><li><b>ESL</b> §14.5 — principal components <i>(variance maximisation = reconstruction-error minimisation).</i></li></ul>
         </div>
 
         <div class="sess">
@@ -631,10 +734,13 @@ section.block > h2{font-size:20px;color:var(--acc);border-bottom:1px solid var(-
             <div class="formula">$\text{Stress}=\sum_{i<j}\big(\lVert z_i-z_j\rVert - d_{ij}\big)^2$<span class="cap">MDS stress: mismatch between embedded and target distances.</span></div>
           </div>
           <div class="topic"><span class="tt">Non-linear manifold methods</span><p>t-SNE and UMAP preserve local neighbourhood structure for visualisation, revealing clusters that linear PCA may miss.</p></div>
+          <div class="worked"><span class="t">Worked mini-example (classical MDS = PCA)</span>Given only a pairwise distance matrix, double-centre it ($B=-\tfrac12 J D^{(2)} J$) and take the top eigenvectors of $B$: the resulting embedding is exactly the PCA projection of the original points. So when distances are Euclidean, classical MDS and PCA coincide — they differ only when the input is a non-Euclidean dissimilarity.</div>
+          <div class="pitfall"><b>Pitfall:</b> t-SNE distorts global geometry — between-cluster distances and cluster sizes in a t-SNE plot are <i>not</i> meaningful, and results swing with the perplexity setting. Use it to spot structure, never to read off quantities.</div>
           <div class="keyidea"><b>Key idea:</b> PCA preserves global variance; MDS preserves distances; t-SNE/UMAP preserve local neighbourhoods — match the method to what you need to keep.</div>
+          <p class="connects"><b>Connects to:</b> these embeddings are how you <i>see</i> the clusters of Module 6 and sanity-check high-dimensional data before modelling.</p>
           <a class="demolink" href="./index.html#mds" target="_blank" rel="noopener">MDS demo</a>
           <a class="demolink" href="./index.html#pca" target="_blank" rel="noopener">PCA demo</a>
-          <ul class="readings"><li><b>ESL</b> §14.8 — multidimensional scaling</li></ul>
+          <ul class="readings"><li><b>ESL</b> §14.8 — multidimensional scaling <i>(classical vs. non-metric MDS).</i></li><li><b>ESL</b> §14.9 — nonlinear dimension reduction <i>(local methods, manifolds).</i></li></ul>
         </div>
 
       </div>
@@ -661,9 +767,12 @@ section.block > h2{font-size:20px;color:var(--acc);border-bottom:1px solid var(-
           <div class="topic"><span class="tt">CNNs</span><p>Convolutional layers share weights across space (translation equivariance) and pool for invariance, drastically cutting parameters for image-like data.</p>
             <div class="formula">$(f * g)(i,j)=\sum_{m}\sum_{n} f(m,n)\,g(i-m,\,j-n)$<span class="cap">Discrete 2-D convolution — the core operation of a conv layer.</span></div>
           </div>
+          <div class="worked"><span class="t">Worked mini-example (parameter saving)</span>A fully-connected layer on a $100\times100$ image to 100 hidden units needs $10{,}000\times100=10^6$ weights. A conv layer with one hundred $3\times3$ filters needs only $100\times9=900$ — a thousandfold reduction — yet detects the same edge in every location thanks to weight sharing.</div>
+          <div class="pitfall"><b>Pitfall:</b> convolution gives translation <i>equivariance</i>, not rotation/scale invariance — a sideways or much larger object can be missed unless you augment the data (rotations, crops, flips) or pool appropriately.</div>
           <div class="keyidea"><b>Key idea:</b> the right architectural prior (locality + weight sharing) beats brute-force fully-connected layers on structured data.</div>
+          <p class="connects"><b>Connects to:</b> a CNN is still trained by the gradient descent (S4) and backprop (S5) of Module 1 — only the layer's connectivity changes, encoding a spatial prior.</p>
           <a class="demolink" href="./index.html#mlp" target="_blank" rel="noopener">MLP demo (contrast)</a>
-          <ul class="readings"><li><b>Deep Learning</b> ch. 9 — convolutional networks</li></ul>
+          <ul class="readings"><li><b>Deep Learning</b> ch. 9 — convolutional networks <i>(convolution, pooling, the structured prior).</i></li></ul>
         </div>
 
         <div class="sess">
@@ -673,8 +782,11 @@ section.block > h2{font-size:20px;color:var(--acc);border-bottom:1px solid var(-
           <div class="topic"><span class="tt">RNNs &amp; attention</span><p>Recurrent nets process sequences with shared weights through time (and suffer vanishing gradients); attention and the Transformer let every position attend to every other directly.</p>
             <div class="formula">$\text{Attention}(Q,K,V)=\operatorname{softmax}\!\Big(\tfrac{QK^\top}{\sqrt{d_k}}\Big)V$<span class="cap">Scaled dot-product attention — the heart of the Transformer.</span></div>
           </div>
+          <div class="worked"><span class="t">Worked mini-example (why the $\sqrt{d_k}$)</span>If query and key entries are independent with unit variance, the dot product $q^\top k$ over $d_k$ dimensions has variance $d_k$. Without scaling, large $d_k$ pushes the softmax into a near one-hot regime where gradients vanish; dividing by $\sqrt{d_k}$ restores unit-scale logits and keeps the softmax in its responsive range.</div>
+          <div class="pitfall"><b>Pitfall:</b> self-attention costs $O(n^2)$ in sequence length $n$ (every position attends to every other), so long sequences are expensive — the motivation for the many "efficient attention" variants. RNNs instead suffer the vanishing gradients of S6 over long horizons.</div>
           <div class="keyidea"><b>Key idea:</b> attention replaces fixed recurrence with learned, content-based routing of information.</div>
-          <ul class="readings"><li><b>Deep Learning</b> ch. 10 — sequence modeling</li></ul>
+          <p class="connects"><b>Connects to:</b> the softmax here is the same one from S4; attention is the architecture behind the large language models students use elsewhere.</p>
+          <ul class="readings"><li><b>Deep Learning</b> ch. 10 — sequence modeling <i>(RNNs, LSTMs, the vanishing-gradient-over-time problem).</i></li></ul>
         </div>
 
         <div class="sess">
@@ -684,9 +796,12 @@ section.block > h2{font-size:20px;color:var(--acc);border-bottom:1px solid var(-
           <div class="topic"><span class="tt">Autoencoders &amp; VAEs</span><p>Learn a compressed latent code by reconstructing the input; variational autoencoders impose a probabilistic latent space enabling sampling.</p>
             <div class="formula">$\mathcal{L}_{\text{VAE}}=\mathbb{E}_{q(z|x)}[\log p(x|z)] - \mathrm{KL}\big(q(z|x)\,\Vert\,p(z)\big)$<span class="cap">The VAE evidence lower bound: reconstruction minus a latent-regularising KL term.</span></div>
           </div>
+          <div class="worked"><span class="t">Worked mini-example (linear AE ≈ PCA)</span>A single-hidden-layer linear autoencoder with $k$ units, trained on squared reconstruction loss, learns the same subspace as the top $k$ PCA components — the encoder spans the principal eigenvectors. The nonlinearity and the VAE's KL term are what take you beyond PCA to a smooth, sampleable latent space.</div>
+          <div class="pitfall"><b>Pitfall:</b> VAEs trade sharpness for a well-behaved latent space — samples are often blurry, and an over-weighted KL term causes "posterior collapse," where the decoder ignores the latent code entirely.</div>
           <div class="keyidea"><b>Key idea:</b> generative models learn the data distribution itself, not just a decision boundary — enabling sampling, denoising, and representation learning.</div>
+          <p class="connects"><b>Connects to:</b> the autoencoder bottleneck is non-linear dimensionality reduction (Module 7); the probabilistic latent is the deep cousin of the Gaussian mixture (S21).</p>
           <a class="demolink" href="./index.html#pca" target="_blank" rel="noopener">PCA demo (linear analogue)</a>
-          <ul class="readings"><li><b>Deep Learning</b> ch. 14 (autoencoders), ch. 20 (generative models)</li></ul>
+          <ul class="readings"><li><b>Deep Learning</b> ch. 14 (autoencoders), ch. 20 (generative models) <i>(the ELBO &amp; latent-variable models).</i></li></ul>
         </div>
 
         <div class="sess">
@@ -696,8 +811,11 @@ section.block > h2{font-size:20px;color:var(--acc);border-bottom:1px solid var(-
           <div class="topic"><span class="tt">GANs &amp; diffusion</span><p>GANs pit a generator against a discriminator in a minimax game; diffusion models learn to reverse a gradual noising process to synthesise samples.</p>
             <div class="formula">$\min_G \max_D \;\mathbb{E}_{x}[\log D(x)] + \mathbb{E}_{z}[\log(1-D(G(z)))]$<span class="cap">The GAN minimax objective.</span></div>
           </div>
+          <div class="worked"><span class="t">Worked mini-example (the generator's signal)</span>At the optimum the discriminator outputs $D^\*(x)=\frac{p_{\text{data}}(x)}{p_{\text{data}}(x)+p_g(x)}$, and the generator's objective then equals minimising the Jensen–Shannon divergence between real and generated distributions — i.e. making $p_g$ match $p_{\text{data}}$. In practice the generator is trained to maximise $\log D(G(z))$ (the "non-saturating" form) to keep early gradients strong.</div>
+          <div class="pitfall"><b>Pitfall:</b> GAN training is a delicate minimax equilibrium — prone to instability and <i>mode collapse</i>, where the generator produces only a few sample types. Diffusion models trade slower sampling for far more stable training, which is why they now dominate image synthesis.</div>
           <div class="keyidea"><b>Key idea:</b> modern generation is an adversarial or denoising game — the model learns to produce samples indistinguishable from real data.</div>
-          <ul class="readings"><li><b>Deep Learning</b> §20.10 — deep generative models</li></ul>
+          <p class="connects"><b>Connects to:</b> the discriminator is just a classifier (Modules 1–5); diffusion's score-matching reuses the gradient-based optimisation thread that runs through the whole course.</p>
+          <ul class="readings"><li><b>Deep Learning</b> §20.10 — deep generative models <i>(GANs &amp; the adversarial game).</i></li></ul>
         </div>
 
       </div>
@@ -778,6 +896,35 @@ section.block > h2{font-size:20px;color:var(--acc);border-bottom:1px solid var(-
       <div class="term"><dt>MDS</dt><dd>Embedding that preserves pairwise distances by minimising a stress objective.</dd></div>
       <div class="term"><dt>Softmax / cross-entropy</dt><dd>Multiclass probability output and its matching log-loss for classification.</dd></div>
       <div class="term"><dt>Generative model</dt><dd>A model of the data distribution itself (VAE, GAN, diffusion) enabling sampling.</dd></div>
+      <div class="term"><dt>Hypothesis class</dt><dd>The set of candidate functions a learner can express; its richness sets the bias–variance starting point.</dd></div>
+      <div class="term"><dt>Generalisation</dt><dd>How well a model trained on a sample performs on unseen data — the real goal of learning.</dd></div>
+      <div class="term"><dt>Training vs. test error</dt><dd>Error on data the model fit vs. on held-out data; the gap between them measures overfitting.</dd></div>
+      <div class="term"><dt>Underfitting</dt><dd>A model too simple to capture the signal — high bias, poor on both train and test sets.</dd></div>
+      <div class="term"><dt>Hyperparameter</dt><dd>A setting fixed before training ($k$, $\lambda$, $C$, $\gamma$, depth, learning rate), tuned on validation data.</dd></div>
+      <div class="term"><dt>Feature scaling</dt><dd>Standardising features to comparable ranges; essential for distance-, gradient-, and penalty-based methods.</dd></div>
+      <div class="term"><dt>Learning rate</dt><dd>The step size $\eta$ in gradient descent — too large diverges, too small crawls.</dd></div>
+      <div class="term"><dt>Stochastic gradient descent</dt><dd>Gradient descent on mini-batches; noisier but far cheaper steps, with a useful regularising effect.</dd></div>
+      <div class="term"><dt>Epoch</dt><dd>One full pass of SGD over the training set.</dd></div>
+      <div class="term"><dt>Dropout</dt><dd>Randomly zeroing units during training to prevent co-adaptation — a stochastic regularizer.</dd></div>
+      <div class="term"><dt>Weight initialisation</dt><dd>Choosing starting weights (Xavier/He) to keep signal and gradient scales stable through depth.</dd></div>
+      <div class="term"><dt>Universal approximation</dt><dd>One hidden layer with enough units can approximate any continuous function; depth makes this efficient.</dd></div>
+      <div class="term"><dt>ReLU</dt><dd>The activation $\max(0,z)$ — cheap, non-saturating for positive inputs, but units can "die" at zero.</dd></div>
+      <div class="term"><dt>Ridge (L2)</dt><dd>Penalty $\lambda\lVert\beta\rVert_2^2$ that shrinks coefficients smoothly toward zero.</dd></div>
+      <div class="term"><dt>Lasso (L1)</dt><dd>Penalty $\lambda\lVert\beta\rVert_1$ that drives some coefficients to exactly zero — automatic feature selection.</dd></div>
+      <div class="term"><dt>Hinge loss</dt><dd>$\max(0,1-y\,f(x))$ — the SVM's loss; zero once correct with margin, linear in the violation.</dd></div>
+      <div class="term"><dt>Impurity (Gini / entropy)</dt><dd>Node-level class-mixing measures a tree minimises when choosing splits.</dd></div>
+      <div class="term"><dt>Out-of-bag error</dt><dd>Free validation estimate from the ~37% of points each bootstrap sample omits.</dd></div>
+      <div class="term"><dt>Bootstrap</dt><dd>Sampling the data with replacement to create resampled training sets (the basis of bagging).</dd></div>
+      <div class="term"><dt>Mercer / PSD kernel</dt><dd>A kernel whose Gram matrix is positive semi-definite, guaranteeing a valid feature space and convex problem.</dd></div>
+      <div class="term"><dt>Gram matrix</dt><dd>The $n\times n$ matrix of pairwise kernel values $K(x_i,x_j)$ on which kernel methods operate.</dd></div>
+      <div class="term"><dt>Silhouette score</dt><dd>Per-point cluster quality in $[-1,1]$ comparing intra- to nearest-cluster distance; used to choose $K$.</dd></div>
+      <div class="term"><dt>Linkage</dt><dd>The inter-cluster distance rule (single, complete, average, Ward) shaping a hierarchical clustering.</dd></div>
+      <div class="term"><dt>EM algorithm</dt><dd>Alternating expectation/maximisation steps that fit latent-variable models such as Gaussian mixtures.</dd></div>
+      <div class="term"><dt>Variance explained</dt><dd>The fraction $\lambda_k/\sum_j\lambda_j$ of total variance captured by principal component $k$.</dd></div>
+      <div class="term"><dt>Convolution / weight sharing</dt><dd>Sliding a small shared filter across an input for translation-equivariant, parameter-efficient layers.</dd></div>
+      <div class="term"><dt>Attention</dt><dd>Content-based weighting that lets each position draw on every other — the core of the Transformer.</dd></div>
+      <div class="term"><dt>ELBO</dt><dd>The evidence lower bound a VAE maximises: reconstruction quality minus a latent-regularising KL term.</dd></div>
+      <div class="term"><dt>Mode collapse</dt><dd>A GAN failure where the generator produces only a few sample types, ignoring data diversity.</dd></div>
     </dl>
   </section>
 
