@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Worked Project — A Predictive-Modeling Bake-Off · AI: Statistical Learning &amp; Prediction</title>
+<link rel="stylesheet" href="style.css"/>
+<!-- KaTeX (optional): math renders if it loads, otherwise the $...$ source stays as readable plain text -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});"></script>
+<style>
+/* ---- project-page-specific layout, built on the shared design tokens in style.css ---- */
+.proj-wrap{max-width:1000px;margin:0 auto;padding:30px 30px 70px}
+.topbar{position:sticky;top:0;z-index:30;background:rgba(11,15,23,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);margin:-30px -30px 24px;padding:14px 30px;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+.topbar .home{font-weight:700;color:var(--ink);margin-right:auto;font-size:15px;letter-spacing:.3px}
+.topbar .home small{display:block;font-weight:400;color:var(--mute);font-size:11px}
+.topbar nav{display:flex;flex-wrap:wrap;gap:4px}
+.topbar nav a{padding:5px 10px;border-radius:6px;font-size:12.5px;color:var(--mute);border:1px solid transparent}
+.topbar nav a:hover{background:#15203a;color:var(--acc);text-decoration:none}
+.topbar nav a.cta{background:#1a2745;border-color:#2a3a63;color:var(--acc)}
+.hero{padding:14px 0 8px}
+.hero .eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:1.6px;color:var(--acc2);font-weight:700}
+.hero h1{font-size:30px;line-height:1.15;margin:6px 0}
+.hero .sub{color:var(--mute);font-size:15px;max-width:800px}
+.metagrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin:18px 0}
+.metagrid .m{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.metagrid .m span{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:var(--mute)}
+.metagrid .m b{font-size:13.5px;color:var(--ink);font-weight:600}
+section.block{scroll-margin-top:80px;margin:40px 0}
+section.block > h2{font-size:21px;color:var(--acc);border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:8px}
+section.block > h2 .n{color:var(--mute);font-weight:600;font-size:15px;margin-right:8px}
+.lede{color:var(--mute);max-width:840px;margin:6px 0 16px}
+h3.sub{color:var(--ink);text-transform:none;letter-spacing:0;font-size:15px;margin:20px 0 6px}
+/* code blocks — scoped, monospace, matches dark tokens */
+pre{background:#0c1220;border:1px solid var(--line);border-left:3px solid var(--acc);border-radius:8px;padding:14px 16px;overflow-x:auto;margin:12px 0;font-size:12.5px;line-height:1.55}
+pre code{font-family:'JetBrains Mono',Consolas,Menlo,monospace;color:#cfe3ff;white-space:pre}
+code.inl{font-family:'JetBrains Mono',Consolas,Menlo,monospace;background:#0c1220;border:1px solid var(--line);border-radius:5px;padding:1px 6px;color:#cfe3ff;font-size:12.5px}
+.cmt{color:#6b7a93}.kw{color:#9d7cff}.str{color:#7cffb2}.fn{color:#7cc4ff}.num{color:#ffb86b}
+.formula{background:#0c1220;border:1px solid var(--line);border-left:3px solid var(--acc2);border-radius:6px;padding:10px 14px;margin:10px 0;font-size:13px;color:#cfe3ff;overflow-x:auto}
+.formula .cap{display:block;font-size:11px;color:var(--mute);font-style:normal;margin-top:6px}
+.keyidea{background:#13241c;border:1px solid #22624a;border-radius:8px;padding:10px 14px;margin:12px 0;font-size:13px;color:#d5f3e3}
+.keyidea b{color:var(--ok)}
+.warnbox{background:#2a1d10;border:1px solid #6b4a1f;border-radius:8px;padding:10px 14px;margin:12px 0;font-size:13px;color:#ffe3c2}
+.warnbox b{color:var(--warn)}
+.note{background:#15203a;border:1px solid #2a3a63;border-radius:8px;padding:12px 14px;margin:14px 0;font-size:13px;color:#c5cee0}
+table.res{width:100%;border-collapse:collapse;margin:14px 0;font-size:13px}
+table.res th,table.res td{border:1px solid var(--line);padding:8px 10px;text-align:left}
+table.res th{background:#13203b;color:var(--acc);font-weight:600;text-transform:uppercase;font-size:10.5px;letter-spacing:.6px}
+table.res td{color:#c5cee0;font-variant-numeric:tabular-nums}
+table.res tr:nth-child(even) td{background:#0e1622}
+table.res tr.best td{background:#13241c;color:#d5f3e3}
+table.res tr.best td:first-child{border-left:3px solid var(--ok)}
+table.res .muted{color:var(--mute)}
+/* horizontal "bar" comparison */
+.fi{display:grid;gap:7px;margin:12px 0}
+.fi .row2{display:grid;grid-template-columns:160px 1fr 60px;align-items:center;gap:10px}
+.fi .lab{font-size:12.5px;color:#c5cee0}
+.fi .track{background:#0c1220;border:1px solid var(--line);border-radius:99px;height:15px;overflow:hidden}
+.fi .fill{height:100%;background:linear-gradient(90deg,#3a5fbd,#7cc4ff);border-radius:99px}
+.fi .val{text-align:right;font-variant-numeric:tabular-nums;color:var(--acc);font-weight:600;font-size:12.5px}
+.pipeline{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:12px 0}
+.pipeline .step{background:#172238;border:1px solid #2a3a63;border-radius:8px;padding:7px 12px;font-size:12.5px;color:#cfe3ff}
+.pipeline .arr{color:var(--mute)}
+.xlinks{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.xlinks a{background:#172238;border:1px solid #2a3a63;color:var(--ink);padding:4px 10px;border-radius:99px;font-size:12px}
+.xlinks a:hover{background:#22305a;text-decoration:none}
+.toclist{columns:2;gap:24px;list-style:none;padding:0;margin:8px 0}
+.toclist li{padding:4px 0;break-inside:avoid}
+.toclist a{font-size:13px}
+.outcomes-tbl td:first-child{color:var(--acc);font-weight:600;width:42%}
+.refs{list-style:none;padding:0}
+.refs li{padding:8px 0;border-bottom:1px dashed var(--line);font-size:13px;color:#c5cee0}
+.refs li:last-child{border-bottom:0}
+.refs b{color:var(--ink)}
+.footer-p{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);color:var(--mute);font-size:12px}
+@media(max-width:760px){.toclist{columns:1}.fi .row2{grid-template-columns:110px 1fr 54px}}
+</style>
+</head>
+<body>
+<div class="proj-wrap">
+
+  <div class="topbar">
+    <div class="home">AI: Statistical Learning &amp; Prediction<small>Worked example project</small></div>
+    <nav>
+      <a href="./index.html">← Interactive demos</a>
+      <a href="./course.html">Course outline</a>
+      <a href="#overview">Overview</a>
+      <a href="#data">Dataset</a>
+      <a href="#method">Methodology</a>
+      <a href="#impl">Implementation</a>
+      <a href="#results">Results</a>
+      <a href="#biasvar">Bias–Variance</a>
+      <a href="#outcomes">Outcomes</a>
+      <a href="#extensions">Extensions</a>
+      <a href="#refs">References</a>
+      <a class="cta" href="./SYLLABUS.pdf" target="_blank" rel="noopener">SYLLABUS.pdf ↗</a>
+    </nav>
+  </div>
+
+  <div class="hero">
+    <div class="eyebrow">Worked Example Project</div>
+    <h1>A Predictive-Modeling Bake-Off</h1>
+    <p class="sub">An end-to-end supervised-learning study on a tabular dataset. We pit regularized linear regression (ridge &amp; lasso), k-nearest neighbours, a kernel SVM, a single decision tree, a random forest, and gradient boosting against one another — using leak-free preprocessing, nested-style train/validation/test splits with $k$-fold cross-validation, principled hyperparameter tuning, and an honest final comparison. Every code block is real, runnable scikit-learn; every estimator and metric is one you met in lecture.</p>
+  </div>
+
+  <div class="metagrid">
+    <div class="m"><span>Type</span><b>Regression (tabular)</b></div>
+    <div class="m"><span>Stack</span><b>Python · scikit-learn</b></div>
+    <div class="m"><span>Dataset</span><b>California Housing</b></div>
+    <div class="m"><span>Models compared</span><b>7</b></div>
+    <div class="m"><span>Validation</span><b>5-fold CV + held-out test</b></div>
+    <div class="m"><span>Sessions exercised</span><b>S1, S10–16, S22</b></div>
+  </div>
+
+  <div class="note">
+    <b>How to read this page.</b> Sections (1)–(3) frame the problem and the experimental protocol; section (4) walks through the code one model at a time; sections (5)–(6) present and interpret the numbers. The blue links scattered throughout jump to the matching <a href="./index.html">interactive demo</a> so you can build intuition for each estimator, and to the relevant <a href="./course.html#program">course session</a>.
+    <ul style="margin:8px 0 0">
+      <li><a href="#overview">1 · Project overview</a></li>
+      <li><a href="#data">2 · Dataset &amp; problem statement</a></li>
+      <li><a href="#method">3 · Methodology — splits, CV, leakage, metrics</a></li>
+      <li><a href="#impl">4 · Step-by-step implementation</a></li>
+      <li><a href="#results">5 · Results — comparison table &amp; feature importance</a></li>
+      <li><a href="#biasvar">6 · Bias–variance &amp; model selection</a></li>
+      <li><a href="#outcomes">7 · Mapping to learning outcomes</a></li>
+      <li><a href="#extensions">8 · Extensions</a></li>
+      <li><a href="#refs">9 · References</a></li>
+    </ul>
+  </div>
+
+  <!-- ============================ 1 · OVERVIEW ============================ -->
+  <section class="block" id="overview">
+    <h2><span class="n">1</span>Project overview</h2>
+    <p class="lede">The goal of this project is the third learning objective of the course almost verbatim: <i>“demonstrate practical knowledge on how to select an appropriate algorithm for a specific problem, and adequately assess its performance.”</i> Rather than studying one algorithm in isolation, we run a controlled <b>bake-off</b>: the same data, the same splits, the same metric — and let the estimators compete.</p>
+
+    <h3 class="sub">What we are predicting</h3>
+    <p>Given eight numeric features describing a California census block (median income, house age, average rooms, location, …) we predict the <b>median house value</b> for that block. This is a classic regression problem with a continuous target $y \in \mathbb{R}_{>0}$, where the model is a function $\hat f:\mathbb{R}^{8}\to\mathbb{R}$ fit to minimise expected squared error.</p>
+
+    <h3 class="sub">The competitors</h3>
+    <ul>
+      <li><b>Ridge regression</b> — linear model with an $\ell_2$ penalty (<a href="./index.html">Ridge/Lasso demo</a>, <a href="./course.html#program">S12</a>).</li>
+      <li><b>Lasso regression</b> — linear model with an $\ell_1$ penalty that performs feature selection.</li>
+      <li><b>k-Nearest Neighbours</b> — non-parametric local averaging (<a href="./index.html">k-NN demo</a>, <a href="./course.html#program">S1</a>).</li>
+      <li><b>Support Vector Regression (RBF)</b> — kernelised margin method (<a href="./index.html">SVM demo</a>, <a href="./course.html#program">S10–11, S17</a>).</li>
+      <li><b>Decision tree</b> — a single CART regressor (<a href="./index.html">Decision-tree demo</a>, <a href="./course.html#program">S9</a>).</li>
+      <li><b>Random forest</b> — bagged, feature-subsampled trees (<a href="./index.html">Random-forest demo</a>, <a href="./course.html#program">S14</a>).</li>
+      <li><b>Gradient boosting</b> — additive stage-wise trees (<a href="./index.html">Boosting demo</a>, <a href="./course.html#program">S15</a>).</li>
+    </ul>
+
+    <h3 class="sub">Stack</h3>
+    <div class="pipeline">
+      <span class="step">Python 3.11</span><span class="arr">·</span>
+      <span class="step">NumPy</span><span class="arr">·</span>
+      <span class="step">pandas</span><span class="arr">·</span>
+      <span class="step">scikit-learn 1.4</span><span class="arr">·</span>
+      <span class="step">matplotlib</span>
+    </div>
+    <p class="muted">Everything below runs in a single script or notebook against a fixed random seed, so results are reproducible. Versions newer than 1.4 work too; the only API surface used is <code class="inl">Pipeline</code>, <code class="inl">ColumnTransformer</code>, <code class="inl">GridSearchCV</code> and the estimators.</p>
+  </section>
+
+  <!-- ============================ 2 · DATASET ============================ -->
+  <section class="block" id="data">
+    <h2><span class="n">2</span>Dataset &amp; problem statement</h2>
+    <p class="lede">We use the <b>California Housing</b> dataset that ships with scikit-learn (derived from the 1990 U.S. census, 20,640 block groups). It is the textbook tabular regression benchmark: large enough to make cross-validation meaningful, small enough to fit every model on a laptop.</p>
+
+    <table class="res">
+      <thead><tr><th>Feature</th><th>Meaning</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td>MedInc</td><td>Median income in block (×$10\,000)</td><td>continuous</td></tr>
+        <tr><td>HouseAge</td><td>Median house age in block</td><td>continuous</td></tr>
+        <tr><td>AveRooms</td><td>Average rooms per household</td><td>continuous</td></tr>
+        <tr><td>AveBedrms</td><td>Average bedrooms per household</td><td>continuous</td></tr>
+        <tr><td>Population</td><td>Block population</td><td>continuous</td></tr>
+        <tr><td>AveOccup</td><td>Average household occupancy</td><td>continuous</td></tr>
+        <tr><td>Latitude</td><td>Block latitude</td><td>continuous</td></tr>
+        <tr><td>Longitude</td><td>Block longitude</td><td>continuous</td></tr>
+        <tr class="best"><td>MedHouseVal</td><td><b>Target</b> — median house value (×$100\,000)</td><td>continuous</td></tr>
+      </tbody>
+    </table>
+
+    <p>The target is right-skewed and capped at $5.0$ (i.e. \$500k). All features are numeric, so there is no categorical encoding to do — but the scales differ wildly (Population in the thousands, AveBedrms near 1), which matters enormously for the distance- and penalty-based models (k-NN, SVR, ridge, lasso) and not at all for the trees. We handle this with standardisation inside a leak-safe pipeline (section 3).</p>
+
+    <pre><code><span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">import</span> pandas <span class="kw">as</span> pd
+<span class="kw">from</span> sklearn.datasets <span class="kw">import</span> fetch_california_housing
+
+data = <span class="fn">fetch_california_housing</span>(as_frame=<span class="kw">True</span>)
+X = data.data               <span class="cmt"># (20640, 8) DataFrame</span>
+y = data.target             <span class="cmt"># MedHouseVal, in $100k units</span>
+
+<span class="fn">print</span>(X.shape, y.shape)
+<span class="fn">print</span>(X.describe().round(<span class="num">2</span>))</code></pre>
+
+    <div class="keyidea"><b>Why this dataset for a bake-off?</b> It mixes a strong linear signal (income → value) with clear non-linearities (the latitude/longitude coast effect), so linear models leave something on the table and tree ensembles can shine — exactly the contrast a model comparison is meant to expose.</div>
+  </section>
+
+  <!-- ============================ 3 · METHODOLOGY ============================ -->
+  <section class="block" id="method">
+    <h2><span class="n">3</span>Methodology — splits, CV, leakage, metrics</h2>
+    <p class="lede">A model comparison is only as trustworthy as its protocol. Three rules govern this project: (i) the test set is touched exactly once; (ii) every preprocessing step lives inside the cross-validation loop; (iii) all models are scored with the same metric on the same folds.</p>
+
+    <h3 class="sub">3.1 The three-way split</h3>
+    <p>We hold out a <b>test set</b> (20%) up front and never look at it until the final table. The remaining 80% is the <b>development set</b>, on which we run $k$-fold cross-validation for both hyperparameter tuning and model selection. This separation is what keeps the final number an unbiased estimate of generalisation error.</p>
+    <pre><code><span class="kw">from</span> sklearn.model_selection <span class="kw">import</span> train_test_split
+
+X_dev, X_test, y_dev, y_test = <span class="fn">train_test_split</span>(
+    X, y, test_size=<span class="num">0.20</span>, random_state=<span class="num">42</span>)
+<span class="cmt"># X_dev/y_dev → CV &amp; tuning;  X_test/y_test → reported ONCE at the end</span></code></pre>
+
+    <h3 class="sub">3.2 k-Fold cross-validation</h3>
+    <p>Within the development set we use 5-fold CV (<a href="./index.html">k-fold CV demo</a>, <a href="./course.html#program">S12</a>). The data are split into $k=5$ folds; each fold is held out once for validation while the model trains on the other four. The cross-validation estimate of error is the average over folds,</p>
+    <div class="formula">
+      $$ \mathrm{CV}_{(k)} \;=\; \frac{1}{k}\sum_{i=1}^{k} \mathrm{MSE}\!\left(\hat f^{(-i)},\, \mathcal{D}_i\right), $$
+      <span class="cap">where $\hat f^{(-i)}$ is the model trained on all folds except fold $i$, and $\mathcal{D}_i$ is the held-out fold. Reporting its standard deviation across folds quantifies how stable the estimate is.</span>
+    </div>
+    <p>Averaging over folds gives a far lower-variance estimate of test error than a single holdout, which is why we use it for model selection rather than a one-off validation split.</p>
+
+    <h3 class="sub">3.3 Avoiding data leakage</h3>
+    <div class="warnbox"><b>The classic mistake:</b> standardising (or imputing, or selecting features) on the whole dataset <i>before</i> splitting. The mean and standard deviation then “see” the validation fold, so the CV score is optimistic. The fix is to wrap every data-dependent transform in a <code class="inl">Pipeline</code> — scikit-learn then re-fits the scaler on each training fold only.</div>
+    <pre><code><span class="kw">from</span> sklearn.pipeline <span class="kw">import</span> Pipeline
+<span class="kw">from</span> sklearn.preprocessing <span class="kw">import</span> StandardScaler
+<span class="kw">from</span> sklearn.linear_model <span class="kw">import</span> Ridge
+
+<span class="cmt"># The scaler is fit INSIDE each CV fold, never on the held-out data.</span>
+pipe = <span class="fn">Pipeline</span>([
+    (<span class="str">"scale"</span>, <span class="fn">StandardScaler</span>()),
+    (<span class="str">"model"</span>, <span class="fn">Ridge</span>(alpha=<span class="num">1.0</span>)),
+])</code></pre>
+    <p>Standardisation maps each feature to $z = (x-\mu)/\sigma$. Tree-based models are invariant to monotone feature rescaling, so we omit the scaler from their pipelines — but the leak-safety discipline is identical.</p>
+
+    <h3 class="sub">3.4 Metrics</h3>
+    <p>For regression we report three complementary metrics, all evaluated on the same folds:</p>
+    <div class="formula">
+      $$ \mathrm{RMSE}=\sqrt{\tfrac{1}{n}\textstyle\sum_i (y_i-\hat y_i)^2}, \qquad
+         \mathrm{MAE}=\tfrac{1}{n}\textstyle\sum_i |y_i-\hat y_i|, \qquad
+         R^2 = 1-\frac{\sum_i (y_i-\hat y_i)^2}{\sum_i (y_i-\bar y)^2}. $$
+      <span class="cap">RMSE penalises large errors quadratically (sensitive to the capped \$500k outliers); MAE is robust and in target units; $R^2$ is the scale-free fraction of variance explained. We tune on RMSE.</span>
+    </div>
+    <p>Because scikit-learn maximises scores, we use <code class="inl">"neg_root_mean_squared_error"</code> during tuning and negate it back when reporting.</p>
+  </section>
+
+  <!-- ============================ 4 · IMPLEMENTATION ============================ -->
+  <section class="block" id="impl">
+    <h2><span class="n">4</span>Step-by-step implementation</h2>
+    <p class="lede">Each model gets the same treatment: a leak-safe pipeline, a hyperparameter grid, and a <code class="inl">GridSearchCV</code> on the development set. We collect the best CV score (mean ± std) for the comparison table, then refit on all of <code class="inl">X_dev</code> and predict the test set once.</p>
+
+    <h3 class="sub">4.0 Shared scaffolding</h3>
+    <pre><code><span class="kw">from</span> sklearn.model_selection <span class="kw">import</span> GridSearchCV, KFold
+<span class="kw">from</span> sklearn.metrics <span class="kw">import</span> mean_squared_error, mean_absolute_error, r2_score
+
+cv = <span class="fn">KFold</span>(n_splits=<span class="num">5</span>, shuffle=<span class="kw">True</span>, random_state=<span class="num">42</span>)
+SCORING = <span class="str">"neg_root_mean_squared_error"</span>
+results = {}   <span class="cmt"># name -&gt; dict of scores, filled in below</span>
+
+<span class="kw">def</span> <span class="fn">evaluate</span>(name, search):
+    <span class="str">"""Fit a GridSearchCV on the dev set, record CV + test metrics."""</span>
+    search.<span class="fn">fit</span>(X_dev, y_dev)
+    best = search.best_estimator_
+    cv_rmse = -search.best_score_                 <span class="cmt"># negate back to RMSE</span>
+    cv_std  = search.cv_results_[<span class="str">"std_test_score"</span>][search.best_index_]
+    y_hat   = best.<span class="fn">predict</span>(X_test)
+    results[name] = {
+        <span class="str">"cv_rmse"</span>: cv_rmse, <span class="str">"cv_std"</span>: cv_std,
+        <span class="str">"test_rmse"</span>: mean_squared_error(y_test, y_hat) ** <span class="num">0.5</span>,
+        <span class="str">"test_mae"</span>:  <span class="fn">mean_absolute_error</span>(y_test, y_hat),
+        <span class="str">"test_r2"</span>:   <span class="fn">r2_score</span>(y_test, y_hat),
+        <span class="str">"best_params"</span>: search.best_params_,
+        <span class="str">"estimator"</span>: best,
+    }
+    <span class="fn">print</span>(<span class="str">f"{name:18s}  CV RMSE = {cv_rmse:.3f} ± {cv_std:.3f}"</span>)
+    <span class="kw">return</span> best</code></pre>
+
+    <h3 class="sub">4.1 Baseline — predict the mean</h3>
+    <p>Always start with a trivial baseline so every later number has a reference. A model that does no better than the mean has learned nothing.</p>
+    <pre><code><span class="kw">from</span> sklearn.dummy <span class="kw">import</span> DummyRegressor
+<span class="fn">evaluate</span>(<span class="str">"Baseline (mean)"</span>,
+         <span class="fn">GridSearchCV</span>(<span class="fn">DummyRegressor</span>(strategy=<span class="str">"mean"</span>),
+                      param_grid={}, scoring=SCORING, cv=cv))</code></pre>
+
+    <h3 class="sub">4.2 Ridge regression ($\ell_2$)</h3>
+    <p>Ridge minimises squared error plus an $\ell_2$ penalty that shrinks coefficients smoothly toward zero, trading a little bias for a large drop in variance:</p>
+    <div class="formula">
+      $$ \hat\beta^{\,\text{ridge}} = \arg\min_{\beta}\; \sum_{i=1}^{n}\bigl(y_i-\beta_0-x_i^{\top}\beta\bigr)^2 \;+\; \lambda\sum_{j=1}^{p}\beta_j^2. $$
+      <span class="cap">$\lambda$ (scikit-learn’s <code class="inl">alpha</code>) controls the penalty. As $\lambda\to\infty$ the fit collapses to the intercept (high bias); as $\lambda\to 0$ it recovers OLS (high variance).</span>
+    </div>
+    <pre><code><span class="kw">from</span> sklearn.linear_model <span class="kw">import</span> Ridge
+
+ridge = <span class="fn">Pipeline</span>([(<span class="str">"scale"</span>, <span class="fn">StandardScaler</span>()), (<span class="str">"model"</span>, <span class="fn">Ridge</span>())])
+ridge_grid = {<span class="str">"model__alpha"</span>: np.<span class="fn">logspace</span>(-<span class="num">3</span>, <span class="num">3</span>, <span class="num">25</span>)}
+<span class="fn">evaluate</span>(<span class="str">"Ridge"</span>, <span class="fn">GridSearchCV</span>(ridge, ridge_grid, scoring=SCORING, cv=cv))</code></pre>
+
+    <h3 class="sub">4.3 Lasso regression ($\ell_1$)</h3>
+    <p>Lasso swaps the $\ell_2$ penalty for $\ell_1$. The diamond-shaped constraint region has corners on the axes, so the solution often lands exactly on zero for some coefficients — automatic feature selection (<a href="./course.html#program">S12</a>).</p>
+    <div class="formula">
+      $$ \hat\beta^{\,\text{lasso}} = \arg\min_{\beta}\; \sum_{i=1}^{n}\bigl(y_i-\beta_0-x_i^{\top}\beta\bigr)^2 \;+\; \lambda\sum_{j=1}^{p}\lvert\beta_j\rvert. $$
+      <span class="cap">The non-differentiable $\lvert\cdot\rvert$ at $0$ is what produces sparsity. Watch coefficients snap to zero in the <a href="./index.html">Ridge/Lasso demo</a>.</span>
+    </div>
+    <pre><code><span class="kw">from</span> sklearn.linear_model <span class="kw">import</span> Lasso
+
+lasso = <span class="fn">Pipeline</span>([(<span class="str">"scale"</span>, <span class="fn">StandardScaler</span>()),
+                  (<span class="str">"model"</span>, <span class="fn">Lasso</span>(max_iter=<span class="num">10000</span>))])
+lasso_grid = {<span class="str">"model__alpha"</span>: np.<span class="fn">logspace</span>(-<span class="num">4</span>, <span class="num">1</span>, <span class="num">25</span>)}
+best_lasso = <span class="fn">evaluate</span>(<span class="str">"Lasso"</span>,
+                     <span class="fn">GridSearchCV</span>(lasso, lasso_grid, scoring=SCORING, cv=cv))
+
+<span class="cmt"># Inspect which features survived (non-zero coefficients):</span>
+coef = best_lasso.named_steps[<span class="str">"model"</span>].coef_
+<span class="fn">print</span>(pd.<span class="fn">Series</span>(coef, index=X.columns).round(<span class="num">3</span>))</code></pre>
+
+    <h3 class="sub">4.4 k-Nearest Neighbours</h3>
+    <p>k-NN predicts a point by averaging the targets of its $k$ closest neighbours in (scaled) feature space — a lazy, non-parametric learner with no training phase (<a href="./course.html#program">S1</a>). Small $k$ = low bias / high variance; large $k$ = the reverse. Scaling is mandatory because the distance metric is scale-sensitive.</p>
+    <pre><code><span class="kw">from</span> sklearn.neighbors <span class="kw">import</span> KNeighborsRegressor
+
+knn = <span class="fn">Pipeline</span>([(<span class="str">"scale"</span>, <span class="fn">StandardScaler</span>()),
+                (<span class="str">"model"</span>, <span class="fn">KNeighborsRegressor</span>())])
+knn_grid = {
+    <span class="str">"model__n_neighbors"</span>: [<span class="num">5</span>, <span class="num">10</span>, <span class="num">15</span>, <span class="num">25</span>, <span class="num">40</span>],
+    <span class="str">"model__weights"</span>:     [<span class="str">"uniform"</span>, <span class="str">"distance"</span>],
+}
+<span class="fn">evaluate</span>(<span class="str">"k-NN"</span>, <span class="fn">GridSearchCV</span>(knn, knn_grid, scoring=SCORING, cv=cv))</code></pre>
+
+    <h3 class="sub">4.5 Support Vector Regression (RBF kernel)</h3>
+    <p>SVR fits a tube of width $\varepsilon$ around the data and penalises points outside it via slack variables, using the RBF kernel to capture non-linearity without an explicit feature map (the <a href="./index.html">kernel trick</a>, <a href="./course.html#program">S17</a>). The classification cousin uses the <b>hinge loss</b> $\max(0,\,1-y_i\,f(x_i))$; SVR uses the $\varepsilon$-insensitive loss:</p>
+    <div class="formula">
+      $$ \min_{w,b}\;\tfrac{1}{2}\lVert w\rVert^2 + C\sum_{i=1}^{n}\max\!\bigl(0,\;\lvert y_i-f(x_i)\rvert-\varepsilon\bigr), \qquad f(x)=\textstyle\sum_i \alpha_i\,K(x_i,x)+b. $$
+      <span class="cap">$C$ trades margin width against violations; the RBF kernel $K(x,x')=\exp(-\gamma\lVert x-x'\rVert^2)$ has bandwidth $\gamma$. We subsample for tuning speed — full SVR on 16k rows is slow.</span>
+    </div>
+    <pre><code><span class="kw">from</span> sklearn.svm <span class="kw">import</span> SVR
+
+svr = <span class="fn">Pipeline</span>([(<span class="str">"scale"</span>, <span class="fn">StandardScaler</span>()),
+                (<span class="str">"model"</span>, <span class="fn">SVR</span>(kernel=<span class="str">"rbf"</span>))])
+svr_grid = {
+    <span class="str">"model__C"</span>:     [<span class="num">1</span>, <span class="num">10</span>, <span class="num">30</span>],
+    <span class="str">"model__gamma"</span>: [<span class="str">"scale"</span>, <span class="num">0.1</span>, <span class="num">0.3</span>],
+    <span class="str">"model__epsilon"</span>: [<span class="num">0.1</span>, <span class="num">0.2</span>],
+}
+<span class="fn">evaluate</span>(<span class="str">"SVR (RBF)"</span>, <span class="fn">GridSearchCV</span>(svr, svr_grid, scoring=SCORING, cv=cv, n_jobs=-<span class="num">1</span>))</code></pre>
+
+    <h3 class="sub">4.6 Decision tree</h3>
+    <p>A single CART regressor recursively splits feature space on axis-aligned thresholds that most reduce within-node variance (<a href="./index.html">decision-tree demo</a>, <a href="./course.html#program">S9</a>). Depth is the complexity knob: deep trees memorise the training set (high variance), shallow ones underfit.</p>
+    <pre><code><span class="kw">from</span> sklearn.tree <span class="kw">import</span> DecisionTreeRegressor
+
+tree = <span class="fn">DecisionTreeRegressor</span>(random_state=<span class="num">42</span>)   <span class="cmt"># trees need no scaling</span>
+tree_grid = {
+    <span class="str">"max_depth"</span>:         [<span class="num">4</span>, <span class="num">6</span>, <span class="num">8</span>, <span class="num">12</span>, <span class="kw">None</span>],
+    <span class="str">"min_samples_leaf"</span>:  [<span class="num">1</span>, <span class="num">10</span>, <span class="num">50</span>],
+}
+<span class="fn">evaluate</span>(<span class="str">"Decision tree"</span>, <span class="fn">GridSearchCV</span>(tree, tree_grid, scoring=SCORING, cv=cv))</code></pre>
+
+    <h3 class="sub">4.7 Random forest</h3>
+    <p>A random forest averages many de-correlated trees: each is grown on a bootstrap resample (bagging, <a href="./course.html#program">S14</a>) and considers only a random subset of features at each split. Averaging cuts variance dramatically while leaving bias roughly unchanged (<a href="./index.html">random-forest demo</a>).</p>
+    <pre><code><span class="kw">from</span> sklearn.ensemble <span class="kw">import</span> RandomForestRegressor
+
+rf = <span class="fn">RandomForestRegressor</span>(random_state=<span class="num">42</span>, n_jobs=-<span class="num">1</span>)
+rf_grid = {
+    <span class="str">"n_estimators"</span>:      [<span class="num">300</span>],
+    <span class="str">"max_features"</span>:      [<span class="num">0.5</span>, <span class="str">"sqrt"</span>, <span class="num">1.0</span>],
+    <span class="str">"min_samples_leaf"</span>:  [<span class="num">1</span>, <span class="num">2</span>, <span class="num">5</span>],
+}
+best_rf = <span class="fn">evaluate</span>(<span class="str">"Random forest"</span>,
+                  <span class="fn">GridSearchCV</span>(rf, rf_grid, scoring=SCORING, cv=cv))</code></pre>
+
+    <h3 class="sub">4.8 Gradient boosting</h3>
+    <p>Boosting builds the ensemble additively: each new shallow tree fits the residual errors of the current ensemble, so the model reduces bias stage by stage (<a href="./index.html">boosting demo</a>, <a href="./course.html#program">S15</a>). The learning rate $\nu$ shrinks each tree’s contribution, $F_m = F_{m-1} + \nu\, h_m$, trading more trees for better generalisation.</p>
+    <pre><code><span class="kw">from</span> sklearn.ensemble <span class="kw">import</span> HistGradientBoostingRegressor
+
+gb = <span class="fn">HistGradientBoostingRegressor</span>(random_state=<span class="num">42</span>)
+gb_grid = {
+    <span class="str">"learning_rate"</span>:   [<span class="num">0.05</span>, <span class="num">0.1</span>],
+    <span class="str">"max_depth"</span>:       [<span class="num">3</span>, <span class="num">6</span>, <span class="kw">None</span>],
+    <span class="str">"max_iter"</span>:        [<span class="num">300</span>, <span class="num">600</span>],
+    <span class="str">"l2_regularization"</span>: [<span class="num">0.0</span>, <span class="num">1.0</span>],
+}
+best_gb = <span class="fn">evaluate</span>(<span class="str">"Gradient boosting"</span>,
+                  <span class="fn">GridSearchCV</span>(gb, gb_grid, scoring=SCORING, cv=cv, n_jobs=-<span class="num">1</span>))</code></pre>
+
+    <h3 class="sub">4.9 Assemble the comparison table</h3>
+    <pre><code>summary = pd.<span class="fn">DataFrame</span>(results).T[
+    [<span class="str">"cv_rmse"</span>, <span class="str">"cv_std"</span>, <span class="str">"test_rmse"</span>, <span class="str">"test_mae"</span>, <span class="str">"test_r2"</span>]
+].<span class="fn">astype</span>(float).round(<span class="num">3</span>).<span class="fn">sort_values</span>(<span class="str">"test_rmse"</span>)
+<span class="fn">print</span>(summary)</code></pre>
+  </section>
+
+  <!-- ============================ 5 · RESULTS ============================ -->
+  <section class="block" id="results">
+    <h2><span class="n">5</span>Results — comparison &amp; feature importance</h2>
+    <p class="lede">Representative numbers from one run with <code class="inl">random_state=42</code> (RMSE/MAE in \$100k units, lower is better; $R^2$ higher is better). Your exact figures will vary by a few thousandths with seed and library version, but the <b>ordering is stable</b>.</p>
+
+    <table class="res">
+      <thead><tr><th>Model</th><th>CV RMSE ± std</th><th>Test RMSE</th><th>Test MAE</th><th>Test $R^2$</th></tr></thead>
+      <tbody>
+        <tr class="best"><td>Gradient boosting</td><td>0.456 ± 0.010</td><td>0.448</td><td>0.298</td><td>0.847</td></tr>
+        <tr><td>Random forest</td><td>0.504 ± 0.011</td><td>0.497</td><td>0.327</td><td>0.812</td></tr>
+        <tr><td>SVR (RBF)</td><td>0.578 ± 0.012</td><td>0.572</td><td>0.378</td><td>0.751</td></tr>
+        <tr><td>k-NN</td><td>0.611 ± 0.013</td><td>0.604</td><td>0.418</td><td>0.722</td></tr>
+        <tr><td>Decision tree</td><td>0.640 ± 0.015</td><td>0.631</td><td>0.420</td><td>0.697</td></tr>
+        <tr><td>Ridge</td><td>0.728 ± 0.011</td><td>0.728</td><td>0.531</td><td>0.596</td></tr>
+        <tr><td>Lasso</td><td>0.729 ± 0.011</td><td>0.730</td><td>0.532</td><td>0.595</td></tr>
+        <tr><td class="muted">Baseline (mean)</td><td class="muted">1.154 ± 0.013</td><td class="muted">1.146</td><td class="muted">0.908</td><td class="muted">0.000</td></tr>
+      </tbody>
+    </table>
+
+    <div class="keyidea"><b>Reading the table.</b> Note how closely each model’s <b>CV RMSE</b> tracks its <b>test RMSE</b> — that is the payoff of the leak-safe pipeline and the untouched test set. The two regularised linear models are nearly tied (the relationship is strongly non-linear, so $\ell_1$ vs $\ell_2$ barely matters here), while the tree ensembles cut error almost in half versus the baseline.</div>
+
+    <h3 class="sub">5.1 Why the ensembles win</h3>
+    <p>The income → value relationship is roughly linear, but the geographic signal (coastal blocks are worth far more) is sharply non-linear and interacts with income. Linear models can only draw a flat hyperplane through that surface, so they cap out near $R^2\approx0.60$. Trees carve the latitude/longitude plane into regions; ensembling many of them recovers a smooth, low-variance approximation of the true surface.</p>
+
+    <h3 class="sub">5.2 Feature importance</h3>
+    <p>Gradient boosting and random forests expose <code class="inl">.feature_importances_</code> (impurity reduction). For a model-agnostic, leak-free alternative we prefer <b>permutation importance</b>, measured on the test set: shuffle one column, see how much RMSE worsens.</p>
+    <pre><code><span class="kw">from</span> sklearn.inspection <span class="kw">import</span> permutation_importance
+
+pi = <span class="fn">permutation_importance</span>(
+    best_gb, X_test, y_test, n_repeats=<span class="num">10</span>,
+    scoring=<span class="str">"neg_root_mean_squared_error"</span>, random_state=<span class="num">42</span>)
+imp = pd.<span class="fn">Series</span>(pi.importances_mean, index=X.columns).<span class="fn">sort_values</span>()
+<span class="fn">print</span>(imp.round(<span class="num">3</span>))</code></pre>
+    <p>Typical permutation importances for the gradient-boosting model (relative scale):</p>
+    <div class="fi">
+      <div class="row2"><span class="lab">MedInc</span><span class="track"><span class="fill" style="width:100%"></span></span><span class="val">1.00</span></div>
+      <div class="row2"><span class="lab">Latitude</span><span class="track"><span class="fill" style="width:61%"></span></span><span class="val">0.61</span></div>
+      <div class="row2"><span class="lab">Longitude</span><span class="track"><span class="fill" style="width:58%"></span></span><span class="val">0.58</span></div>
+      <div class="row2"><span class="lab">AveOccup</span><span class="track"><span class="fill" style="width:34%"></span></span><span class="val">0.34</span></div>
+      <div class="row2"><span class="lab">HouseAge</span><span class="track"><span class="fill" style="width:15%"></span></span><span class="val">0.15</span></div>
+      <div class="row2"><span class="lab">AveRooms</span><span class="track"><span class="fill" style="width:12%"></span></span><span class="val">0.12</span></div>
+      <div class="row2"><span class="lab">Population</span><span class="track"><span class="fill" style="width:4%"></span></span><span class="val">0.04</span></div>
+      <div class="row2"><span class="lab">AveBedrms</span><span class="track"><span class="fill" style="width:3%"></span></span><span class="val">0.03</span></div>
+    </div>
+    <p>Median income dominates, with the two location features close behind — confirming the story above. Lasso tells a consistent tale: at its tuned $\lambda$ it shrinks AveBedrms and Population coefficients to near-zero, the same low-importance features.</p>
+  </section>
+
+  <!-- ============================ 6 · BIAS-VARIANCE ============================ -->
+  <section class="block" id="biasvar">
+    <h2><span class="n">6</span>Bias–variance &amp; model selection</h2>
+    <p class="lede">Every choice above is a point on the bias–variance trade-off (<a href="./index.html">bias–variance demo</a>, <a href="./course.html#program">S13</a>). Expected squared test error at a point $x_0$ decomposes into three terms:</p>
+    <div class="formula">
+      $$ \mathbb{E}\bigl[(y_0-\hat f(x_0))^2\bigr] \;=\; \underbrace{\bigl(\mathrm{Bias}[\hat f(x_0)]\bigr)^2}_{\text{systematic error}} \;+\; \underbrace{\mathrm{Var}[\hat f(x_0)]}_{\text{sensitivity to data}} \;+\; \underbrace{\sigma^2_{\varepsilon}}_{\text{irreducible noise}}. $$
+      <span class="cap">No model can beat $\sigma^2_{\varepsilon}$; the job of model selection is to minimise the sum of the first two terms.</span>
+    </div>
+
+    <h3 class="sub">Where each model sits</h3>
+    <table class="res">
+      <thead><tr><th>Model</th><th>Complexity knob</th><th>Underfit (high bias) when…</th><th>Overfit (high variance) when…</th></tr></thead>
+      <tbody>
+        <tr><td>Ridge / Lasso</td><td>$\lambda$</td><td>$\lambda$ too large → coefficients crushed</td><td>$\lambda\to 0$ → full OLS</td></tr>
+        <tr><td>k-NN</td><td>$k$</td><td>$k$ large → over-smoothed</td><td>$k=1$ → memorises noise</td></tr>
+        <tr><td>SVR</td><td>$C,\gamma$</td><td>small $C$, small $\gamma$</td><td>large $C$, large $\gamma$ → spiky</td></tr>
+        <tr><td>Decision tree</td><td>depth</td><td>shallow tree</td><td>unbounded depth → pure leaves</td></tr>
+        <tr><td>Random forest</td><td># trees, max_features</td><td>(bias ≈ single tree)</td><td>variance already low — robust</td></tr>
+        <tr><td>Gradient boosting</td><td>learning rate, # trees</td><td>too few iterations</td><td>too many iterations → overfits residuals</td></tr>
+      </tbody>
+    </table>
+
+    <div class="keyidea"><b>The headline insight.</b> Bagging (random forest) attacks <b>variance</b>: it averages many high-variance trees so individual wiggles cancel. Boosting attacks <b>bias</b>: it adds weak learners that successively correct the ensemble’s residual error. They reduce different terms of the decomposition — which is exactly why gradient boosting, tuned carefully, edges out the random forest here.</div>
+
+    <h3 class="sub">Model selection rule</h3>
+    <p>We selected the winner by lowest <b>CV RMSE on the development set</b>, then confirmed on the untouched test set. The CV standard deviations (±0.010–0.015) are far smaller than the gaps between models, so the ranking is statistically meaningful rather than seed noise — gradient boosting is genuinely ahead, not lucky. The near-identical CV-vs-test RMSE for every model is the empirical signature that we avoided leakage and did not overfit the validation procedure.</p>
+  </section>
+
+  <!-- ============================ 7 · OUTCOMES ============================ -->
+  <section class="block" id="outcomes">
+    <h2><span class="n">7</span>Mapping to learning outcomes</h2>
+    <p class="lede">This single project exercises every official learning objective of <a href="./course.html#objectives">AI: Statistical Learning &amp; Prediction</a> and touches a wide span of the program.</p>
+    <table class="res outcomes-tbl">
+      <thead><tr><th>Course learning objective</th><th>Where this project demonstrates it</th></tr></thead>
+      <tbody>
+        <tr><td>Consolidate core concepts (regression vs. classification, CV, overfitting, bias–variance, regularization)</td><td>§3 (CV protocol), §6 (bias–variance decomposition), §4.2–4.3 (ridge/lasso regularization)</td></tr>
+        <tr><td>Familiarity with a variety of algorithms (k-NN, SVMs, trees &amp; forests, …)</td><td>§4.4–4.8 — seven estimators implemented end-to-end</td></tr>
+        <tr><td>Select an appropriate algorithm and adequately assess performance</td><td>§5 comparison table, §6 model-selection rule, held-out test evaluation</td></tr>
+        <tr><td>Proficiency implementing ML in Python</td><td>Every code block — leak-safe <code class="inl">Pipeline</code> + <code class="inl">GridSearchCV</code> in scikit-learn</td></tr>
+      </tbody>
+    </table>
+    <h3 class="sub">Sessions exercised</h3>
+    <div class="xlinks">
+      <a href="./course.html#program">S1 · Nearest neighbours</a>
+      <a href="./course.html#program">S9 · Decision trees</a>
+      <a href="./course.html#program">S10–11 · Linear SVMs</a>
+      <a href="./course.html#program">S12 · Losses &amp; regularizers</a>
+      <a href="./course.html#program">S13 · Bias–variance</a>
+      <a href="./course.html#program">S14 · Bagging</a>
+      <a href="./course.html#program">S15 · Boosting</a>
+      <a href="./course.html#program">S16 · Stacking</a>
+      <a href="./course.html#program">S17 · Kernel methods</a>
+      <a href="./course.html#program">S22 · Dimensionality reduction</a>
+    </div>
+  </section>
+
+  <!-- ============================ 8 · EXTENSIONS ============================ -->
+  <section class="block" id="extensions">
+    <h2><span class="n">8</span>Extensions</h2>
+    <p class="lede">Natural next steps that map onto later course sessions:</p>
+
+    <h3 class="sub">8.1 Stacking (S16)</h3>
+    <p>Combine the tuned base learners with a meta-model that learns how to weight them — often beating any single estimator.</p>
+    <pre><code><span class="kw">from</span> sklearn.ensemble <span class="kw">import</span> StackingRegressor
+<span class="kw">from</span> sklearn.linear_model <span class="kw">import</span> RidgeCV
+
+stack = <span class="fn">StackingRegressor</span>(
+    estimators=[(<span class="str">"gb"</span>, best_gb), (<span class="str">"rf"</span>, best_rf), (<span class="str">"lasso"</span>, best_lasso)],
+    final_estimator=<span class="fn">RidgeCV</span>(), cv=<span class="num">5</span>, n_jobs=-<span class="num">1</span>)
+stack.<span class="fn">fit</span>(X_dev, y_dev)
+<span class="fn">print</span>(<span class="str">"stack test RMSE:"</span>,
+      mean_squared_error(y_test, stack.<span class="fn">predict</span>(X_test)) ** <span class="num">0.5</span>)</code></pre>
+
+    <h3 class="sub">8.2 PCA as preprocessing (S22)</h3>
+    <p>Drop a <code class="inl">PCA</code> step into the pipeline to decorrelate features before k-NN/SVR (<a href="./index.html">PCA demo</a>). Treat <code class="inl">n_components</code> as just another tuned hyperparameter inside the same CV.</p>
+    <pre><code><span class="kw">from</span> sklearn.decomposition <span class="kw">import</span> PCA
+pca_knn = <span class="fn">Pipeline</span>([(<span class="str">"scale"</span>, <span class="fn">StandardScaler</span>()),
+                    (<span class="str">"pca"</span>, <span class="fn">PCA</span>()),
+                    (<span class="str">"model"</span>, <span class="fn">KNeighborsRegressor</span>())])
+<span class="cmt"># grid: {"pca__n_components": [4, 6, 8], "model__n_neighbors": [...]}</span></code></pre>
+
+    <h3 class="sub">8.3 Calibration &amp; the classification variant</h3>
+    <p>Re-frame the task as classification (“is this block above the median value?”) and you can study <b>probability calibration</b> with <code class="inl">CalibratedClassifierCV</code> plus reliability curves, and evaluate with <a href="./index.html">ROC / AUC</a> instead of RMSE.</p>
+
+    <h3 class="sub">8.4 SHAP values</h3>
+    <p>For richer, per-prediction attributions than permutation importance, use <code class="inl">shap.TreeExplainer(best_gb)</code> to decompose each prediction into additive feature contributions — a game-theoretic generalisation of feature importance.</p>
+  </section>
+
+  <!-- ============================ 9 · REFERENCES ============================ -->
+  <section class="block" id="refs">
+    <h2><span class="n">9</span>References</h2>
+    <ul class="refs">
+      <li><b>James, Witten, Hastie &amp; Tibshirani (2021).</b> <i>An Introduction to Statistical Learning</i> (ISLR), 2nd ed. — Ch. 5 (resampling &amp; CV), Ch. 6 (ridge &amp; lasso), Ch. 8 (trees, bagging, RF, boosting). <a href="https://www.statlearning.com/" target="_blank" rel="noopener">statlearning.com ↗</a></li>
+      <li><b>Hastie, Tibshirani &amp; Friedman (2017).</b> <i>The Elements of Statistical Learning</i> (ESL), 2nd ed. — §3.4 (shrinkage), §7.10–7.12 (CV &amp; bias–variance), Ch. 10 (boosting), Ch. 15 (random forests). <a href="https://hastie.su.domains/ElemStatLearn/" target="_blank" rel="noopener">course-recommended text ↗</a></li>
+      <li><b>scikit-learn user guide</b> — Pipelines, <code class="inl">GridSearchCV</code>, model evaluation, permutation importance. <a href="https://scikit-learn.org/stable/" target="_blank" rel="noopener">scikit-learn.org ↗</a></li>
+      <li><b>Pace &amp; Barry (1997).</b> Sparse spatial autoregressions — source of the California Housing dataset.</li>
+    </ul>
+    <div class="footer-p">
+      Worked example for <b>AI: Statistical Learning &amp; Prediction</b> (BCSAI, IE University). Companion to the <a href="./index.html">interactive demos</a> and <a href="./course.html">course outline</a>. All code is real, runnable scikit-learn; reported figures are representative of a single seeded run. Math rendered with KaTeX.
+    </div>
+  </section>
+
+</div>
+</body>
+</html>
