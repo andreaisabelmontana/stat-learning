@@ -1,0 +1,10 @@
+{
+  "name": "stat-learning",
+  "version": "1.0.0",
+  "description": "Tested ML algorithm cores behind the Statistical Learning & Prediction interactive site (k-NN, decision trees, k-means, logistic regression, bagging, AdaBoost).",
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  },
+  "license": "MIT"
+}

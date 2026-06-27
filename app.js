@@ -1,4 +1,9 @@
-/* SLP Interactive — single-file demos. No deps. */
+/* SLP Interactive — demos backed by the tested ES modules in ./src/. */
+import { knnPredict } from './src/knn.js';
+import { assign as kmAssign, updateCentroids as kmUpdate, wss as kmWss, kmeansPlusPlusInit } from './src/kmeans.js';
+import { trainStep as logregStep } from './src/logreg.js';
+import { bootstrap as bagBootstrap } from './src/ensemble.js';
+
 (() => {
 'use strict';
 
@@ -95,14 +100,12 @@ const MOUNTED = {};
   const distSel=document.getElementById('knn-dist'),wSel=document.getElementById('knn-w'),clsSel=document.getElementById('knn-cls');
   const W=()=>c.clientWidth, H=()=>c.clientHeight||420;
   function predict(x,y){
-    const ds = pts.map(p=>{
-      const d = distSel.value==='l1' ? Math.abs(p.x-x)+Math.abs(p.y-y) : Math.hypot(p.x-x,p.y-y);
-      return {d,c:p.c};
-    }).sort((a,b)=>a.d-b.d).slice(0,+k.value);
-    if(!ds.length) return -1;
-    const v=[0,0];
-    ds.forEach(d => { v[d.c] += wSel.value==='inv' ? 1/(d.d+1e-6) : 1; });
-    return v[1]>v[0]?1:0;
+    // Delegates to the tested k-NN core in ./src/knn.js.
+    return knnPredict(pts, {x,y}, {
+      k: +k.value,
+      metric: distSel.value==='l1' ? 'l1' : 'l2',
+      weight: wSel.value==='inv' ? 'inverse' : 'uniform',
+    });
   }
   function draw(){
     const {g,w,h}=fitCanvas(c); gridBg(g,w,h);
@@ -855,9 +858,9 @@ function genTwoClusters(W,H, sep=80){
   for(let i=0;i<10;i++) pts.push({x:W*.5+randn()*60, y:H*.5+randn()*60, c:Math.round(rng())});
   return pts;
 }
-function bootstrap(pts){
-  const r=[]; for(let i=0;i<pts.length;i++) r.push(pts[Math.floor(rng()*pts.length)]); return r;
-}
+// Bootstrap replicate via the tested ensemble core in ./src/ensemble.js
+// (shares the page rng so the visualisation is unchanged).
+function bootstrap(pts){ return bagBootstrap(pts, rng); }
 function buildTreeRF(pts, depth, maxDepth, mtry){
   if(pts.length===0) return {leaf:true, pred:0};
   let c0=0,c1=0; pts.forEach(p=>{ if(p.c===0) c0++; else c1++; });
@@ -1409,30 +1412,21 @@ function buildTreeRF(pts, depth, maxDepth, mtry){
   function initCents(){
     const k=+kEl.value; cents=[];
     if(initSel.value==='kpp' && pts.length){
-      cents.push({x:pts[Math.floor(rng()*pts.length)].x, y:pts[Math.floor(rng()*pts.length)].y});
-      while(cents.length<k){
-        const d2 = pts.map(p=>{ let m=Infinity; cents.forEach(c=>{ m=Math.min(m,(c.x-p.x)**2+(c.y-p.y)**2); }); return m; });
-        const sum=d2.reduce((a,b)=>a+b,0);
-        let r=rng()*sum, pick=0;
-        for(let i=0;i<d2.length;i++){ r-=d2[i]; if(r<=0){ pick=i; break; } }
-        cents.push({x:pts[pick].x, y:pts[pick].y});
-      }
+      // Seeding via the tested k-means++ core in ./src/kmeans.js (shares the page rng).
+      cents = kmeansPlusPlusInit(pts, k, rng);
     } else {
       const w=c.clientWidth, h=c.clientHeight||420;
       for(let i=0;i<k;i++) cents.push({x:w*(.2+.6*rng()), y:h*(.2+.6*rng())});
     }
     iter=0; iterEl.textContent=0; wssEl.textContent='—';
   }
-  function assign(){ return pts.map(p=>{ let m=0,md=Infinity; cents.forEach((cc,i)=>{ const d=(cc.x-p.x)**2+(cc.y-p.y)**2; if(d<md){md=d;m=i;} }); return m; }); }
+  // Assignment step delegates to the tested k-means core in ./src/kmeans.js.
+  function assign(){ return kmAssign(pts, cents); }
   function step(){
     if(!cents.length) initCents();
     const a=assign();
-    let wss=0; a.forEach((c,i)=>{ wss+=(cents[c].x-pts[i].x)**2+(cents[c].y-pts[i].y)**2; });
-    wssEl.textContent=wss.toFixed(0);
-    // update
-    const sums = cents.map(()=>[0,0,0]);
-    a.forEach((c,i)=>{ sums[c][0]+=pts[i].x; sums[c][1]+=pts[i].y; sums[c][2]++; });
-    cents = sums.map((s,i)=> s[2]>0 ? {x:s[0]/s[2], y:s[1]/s[2]} : cents[i]);
+    wssEl.textContent=kmWss(pts, a, cents).toFixed(0);
+    cents = kmUpdate(pts, a, cents.length, cents);
     iter++; iterEl.textContent=iter;
     draw();
   }
@@ -1486,19 +1480,13 @@ function buildTreeRF(pts, depth, maxDepth, mtry){
   function fx(p){ const xn=(p.x/W())*2-1, yn=(p.y/H())*2-1; return w[0]*xn+w[1]*yn+w[2]; }
   function train(){
     if(!pts.length) return;
-    const eta=+lr.value, lam=+l2.value;
-    let g=[0,0,0], loss=0, correct=0;
-    pts.forEach(p=>{
-      const xn=(p.x/W())*2-1, yn=(p.y/H())*2-1;
-      const z=w[0]*xn+w[1]*yn+w[2]; const yhat=sig(z);
-      const e=yhat-p.c;
-      g[0]+=e*xn; g[1]+=e*yn; g[2]+=e;
-      loss -= p.c*Math.log(yhat+1e-9)+(1-p.c)*Math.log(1-yhat+1e-9);
-      if((yhat>0.5?1:0)===p.c) correct++;
-    });
-    for(let i=0;i<3;i++) w[i] -= eta*(g[i]/pts.length + (i<2?lam*w[i]:0));
-    lossEl.textContent=(loss/pts.length).toFixed(3);
-    accEl.textContent=(correct/pts.length*100).toFixed(1)+'%';
+    // One gradient step via the tested logistic-regression core in ./src/logreg.js.
+    // Points are mapped to normalised [-1,1] coordinates first.
+    const norm = pts.map(p=>({ x:(p.x/W())*2-1, y:(p.y/H())*2-1, c:p.c }));
+    const res = logregStep(w, norm, { lr:+lr.value, l2:+l2.value });
+    w = res.weights;
+    lossEl.textContent=res.loss.toFixed(3);
+    accEl.textContent=(res.accuracy*100).toFixed(1)+'%';
     draw();
   }
   function draw(){
