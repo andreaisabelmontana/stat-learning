@@ -60,20 +60,8 @@ Randomised tests seed the RNG (`makeRng`) for reproducibility.
 Node 24+ (uses the built-in test runner — no npm install, no dependencies):
 
 ```bash
-node --test
+node --test   # 27 tests, all pass
 ```
-
-```
-ℹ tests 27
-ℹ suites 0
-ℹ pass 27
-ℹ fail 0
-ℹ cancelled 0
-ℹ skipped 0
-ℹ todo 0
-```
-
-All 27 tests pass.
 
 ## Run the site
 
@@ -85,8 +73,12 @@ python -m http.server 8000
 # then open http://localhost:8000/
 ```
 
-## Deploying to GitHub Pages
+## Coursework
 
-Push to `main`; in the repo settings → **Pages** → source = `main` / root. A
-`.nojekyll` file is included so Pages serves the files (including `src/`)
-unchanged. Site appears at `https://<you>.github.io/<repo>/`.
+Hands-on projects from the course, each its own repo + live demo:
+
+- [Fraud Detector](https://andreaisabelmontana.github.io/fraud-detector/) — live transaction stream with a threshold-driven fraud classifier
+- [Mortgage Predict](https://andreaisabelmontana.github.io/mortgage-predict/) — ML pipeline predicting mortgage outcomes, with fairness/explainability
+- [Sound Classifier](https://andreaisabelmontana.github.io/sound-classifier/) — ESC-50 animal sounds, Random Forest vs CNN on log-mel spectrograms
+- [Statistical Learning](https://andreaisabelmontana.github.io/statistical-learning/) — core methods implemented from first principles
+- [BeyondStats](https://andreaisabelmontana.github.io/beyondstats/) — gender inequality via one ML-powered composite score
